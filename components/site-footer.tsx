@@ -14,13 +14,18 @@ export function SiteFooter() {
 
           {/* Brand column */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Image
-              src={IMAGES.logo}
-              alt={`${company.brand} logo`}
-              width={244}
-              height={236}
-              className="h-14 w-auto"
-            />
+            <div className="inline-flex flex-col items-center text-white">
+              <Image
+                src={IMAGES.logo}
+                alt={`${company.brand} logo`}
+                width={160}
+                height={160}
+                className="h-14 w-auto"
+              />
+              <span className="mt-1 whitespace-nowrap text-[9px] font-bold leading-none tracking-[0.22em]">
+                KINGGOOD PACKAGING
+              </span>
+            </div>
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#f0f4f8]/60">
               {company.legalName} — manufacturers of wooden pallets, heavy-duty wood crates and
               cable reels for global logistics. Founded {company.founded}.

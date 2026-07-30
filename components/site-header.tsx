@@ -37,15 +37,25 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
 
         {/* Logo */}
-        <Link href="/" aria-label={`${company.brand} — Home`} className="shrink-0">
+        <Link
+          href="/"
+          aria-label={`${company.brand} — Home`}
+          className={cn(
+            'flex shrink-0 flex-col items-center',
+            scrolled ? 'text-[#0d4077]' : 'text-white',
+          )}
+        >
           <Image
             src={IMAGES.logo}
             alt={`${company.brand} logo`}
-            width={244}
-            height={236}
+            width={160}
+            height={160}
             priority
-            className="h-12 w-auto transition-all duration-300 lg:h-14"
+            className="h-10 w-auto transition-all duration-300 lg:h-11"
           />
+          <span className="mt-0.5 whitespace-nowrap text-[7px] font-bold leading-none tracking-[0.22em] lg:text-[8px]">
+            KINGGOOD PACKAGING
+          </span>
         </Link>
 
         {/* Desktop nav */}
