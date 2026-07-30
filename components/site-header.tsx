@@ -41,16 +41,10 @@ export function SiteHeader() {
           <Image
             src={IMAGES.logo}
             alt={`${company.brand} logo`}
-            width={160}
-            height={56}
+            width={244}
+            height={236}
             priority
-            className={cn(
-              'h-9 w-auto transition-all duration-300 lg:h-10',
-              // On dark/transparent header the logo has a white bg — use mix-blend-multiply
-              // to make the white background disappear against the dark hero overlay.
-              // When scrolled (white header) render it normally.
-              !scrolled && 'mix-blend-multiply brightness-[2]',
-            )}
+            className="h-12 w-auto transition-all duration-300 lg:h-14"
           />
         </Link>
 

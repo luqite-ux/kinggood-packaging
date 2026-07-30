@@ -17,9 +17,9 @@ export function SiteFooter() {
             <Image
               src={IMAGES.logo}
               alt={`${company.brand} logo`}
-              width={176}
-              height={64}
-              className="h-11 w-auto"
+              width={244}
+              height={236}
+              className="h-14 w-auto"
             />
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#f0f4f8]/60">
               {company.legalName} — manufacturers of wooden pallets, heavy-duty wood crates and

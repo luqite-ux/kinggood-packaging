@@ -2,7 +2,7 @@
 
 /** CDN image constants – all authentic customer assets */
 export const IMAGES = {
-  logo: 'https://pub-c7a22068052144a5805830c30d280128.r2.dev/v0-design/kinggood-packaging/logo.png',
+  logo: '/kinggood-logo-mark.png',
   factoryExterior:
     'https://pub-c7a22068052144a5805830c30d280128.r2.dev/v0-design/kinggood-packaging/factory-exterior.png',
   productionWorkshop:
