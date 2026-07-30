@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import { products } from '@/lib/site'
+import { getSupabaseClient } from '@/lib/supabase'
 
 export function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
@@ -12,14 +13,20 @@ export function ContactForm() {
     setStatus('submitting')
     const form = e.currentTarget
     const values = new FormData(form)
+    const supabase = getSupabaseClient()
+    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
+    if (!supabase || !tenantId) return setStatus('error')
     const product = String(values.get('product') || '')
     const country = String(values.get('country') || '')
-    const response = await fetch('/api/inquiries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-      name: values.get('name'), email: values.get('email'), company: values.get('company'),
+    const { error } = await supabase.from('inquiries').insert({
+      tenant_id: tenantId,
+      name: String(values.get('name') || ''),
+      email: String(values.get('email') || ''),
+      company: String(values.get('company') || ''),
       subject: product || 'Website enquiry',
       message: [String(values.get('message') || ''), country && `Country / Region: ${country}`].filter(Boolean).join('\n\n'),
-    }) })
-    if (!response.ok) return setStatus('error')
+    })
+    if (error) return setStatus('error')
     form.reset()
     setStatus('success')
   }
