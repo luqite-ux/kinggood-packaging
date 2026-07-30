@@ -27,7 +27,7 @@ export function ContactForm() {
   if (status === 'success') {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-10 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e8a020]/15 text-[#e8a020]">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e8a020]/15 text-[#8a5600]">
           <CheckCircle2 className="h-7 w-7" />
         </span>
         <h3 className="mt-5 text-2xl font-bold text-[#0f1b2d]">

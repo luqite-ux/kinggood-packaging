@@ -81,7 +81,7 @@ export default function AboutPage() {
               </Reveal>
               <div>
                 <Reveal>
-                  <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+                  <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                     <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                     Our story
                   </p>
@@ -112,7 +112,7 @@ export default function AboutPage() {
                   <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                     {values.map((v) => (
                       <li key={v} className="flex items-start gap-2.5 text-sm text-[#3a5068]">
-                        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#e8a020]" aria-hidden />
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#8a5600]" aria-hidden />
                         <span>{v}</span>
                       </li>
                     ))}
@@ -133,7 +133,7 @@ export default function AboutPage() {
                     <dt className="text-3xl font-bold tabular-nums text-white lg:text-4xl">
                       <CountUp value={s.value} suffix={s.suffix} />
                     </dt>
-                    <dd className="mt-2 text-xs font-bold uppercase tracking-widest text-white/55">
+                    <dd className="mt-2 text-xs font-bold uppercase tracking-widest text-white/70">
                       {s.label}
                     </dd>
                   </div>
@@ -147,7 +147,7 @@ export default function AboutPage() {
         <section className="bg-[#f0f4f8] py-20 lg:py-28" aria-labelledby="facility-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                 Our facility
               </p>
@@ -194,7 +194,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
               <div className="mx-auto max-w-2xl text-center">
-                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                   Manufacturing capability
                 </p>

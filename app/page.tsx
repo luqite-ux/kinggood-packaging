@@ -42,7 +42,7 @@ const ICON_MAP: Record<string, React.FC<{ className?: string; 'aria-hidden'?: bo
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+    <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
       <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
       {children}
     </p>
@@ -137,11 +137,11 @@ export default function HomePage() {
                   <dt className="text-2xl font-bold tabular-nums text-white">
                     {m.value}{m.suffix}
                   </dt>
-                  <dd className="mt-1 text-xs font-bold uppercase tracking-widest text-white/55">
+                  <dd className="mt-1 text-xs font-bold uppercase tracking-widest text-white/70">
                     {m.label}
                   </dd>
                   {m.note && (
-                    <dd className="mt-0.5 text-[11px] leading-snug text-white/40">{m.note}</dd>
+                    <dd className="mt-0.5 text-[11px] leading-snug text-white/70">{m.note}</dd>
                   )}
                 </div>
               ))}
@@ -216,7 +216,7 @@ export default function HomePage() {
                   <Reveal key={step.step} delay={i * 0.07}>
                     <div className="flex gap-4 rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-5">
                       <span
-                        className="mt-0.5 shrink-0 text-sm font-bold tabular-nums text-[#e8a020]"
+                        className="mt-0.5 shrink-0 text-sm font-bold tabular-nums text-[#8a5600]"
                         aria-label={`Step ${step.step}`}
                       >
                         {step.step}

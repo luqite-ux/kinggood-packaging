@@ -119,7 +119,7 @@ export function SiteFooter() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-[#f0f4f8]/40 sm:flex-row sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-[#f0f4f8]/70 sm:flex-row sm:px-6 lg:px-8">
           <p>&copy; {year} {company.legalName}. All rights reserved.</p>
           <p>Nantong, Jiangsu, China</p>
         </div>

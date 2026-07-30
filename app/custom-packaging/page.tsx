@@ -42,7 +42,7 @@ export default function CustomPackagingPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
               <Reveal>
-                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                   Why custom packaging
                 </p>
@@ -67,7 +67,7 @@ export default function CustomPackagingPage() {
                 <ul className="mt-8 space-y-3">
                   {capabilities.map((c) => (
                     <li key={c} className="flex items-start gap-3 text-sm text-[#3a5068]">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#e8a020]" aria-hidden />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#8a5600]" aria-hidden />
                       {c}
                     </li>
                   ))}
@@ -93,7 +93,7 @@ export default function CustomPackagingPage() {
         <section className="bg-[#f0f4f8] py-20 lg:py-28" aria-labelledby="process-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                 Our process
               </p>
@@ -113,7 +113,7 @@ export default function CustomPackagingPage() {
               {customPackagingSteps.map((step, i) => (
                 <Reveal key={step.step} delay={(i % 3) * 0.07}>
                   <div className="flex flex-col rounded-lg border border-[#d8e1eb] bg-white p-7 h-full">
-                    <span className="text-3xl font-bold tabular-nums text-[#e8a020]/50">
+                    <span className="text-3xl font-bold tabular-nums text-[#8a5600]">
                       {step.step}
                     </span>
                     <h3 className="mt-4 text-base font-bold text-[#0f1b2d]">{step.title}</h3>
@@ -131,7 +131,7 @@ export default function CustomPackagingPage() {
         <section className="bg-white py-20 lg:py-28" aria-labelledby="products-custom">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                 Products available
               </p>

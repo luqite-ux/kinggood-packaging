@@ -1,7 +1,7 @@
 export default async function AdminLogin({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams
   return <main className="flex min-h-screen items-center justify-center bg-[#071829] p-6"><div className="w-full max-w-md rounded-xl bg-white p-8 shadow-2xl">
-    <p className="text-xs font-bold uppercase tracking-widest text-[#e8a020]">KINGGOOD</p><h1 className="mt-3 text-2xl font-bold text-[#0f1b2d]">Customer administration</h1>
+    <p className="text-xs font-bold uppercase tracking-widest text-[#8a5600]">KINGGOOD</p><h1 className="mt-3 text-2xl font-bold text-[#0f1b2d]">Customer administration</h1>
     {error && <p role="alert" className="mt-5 rounded bg-red-50 p-3 text-sm text-red-700">{error}</p>}
     <form action="/api/auth/login" method="post" className="mt-6 space-y-4">
       <label className="block text-sm font-medium">Email<input name="email" type="email" required className="mt-1 w-full rounded border px-3 py-2" /></label>

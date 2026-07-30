@@ -44,7 +44,7 @@ export default async function ProductsPage() {
           >
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
-                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                   {catIndex === 0 ? 'Pallets' : catIndex === 1 ? 'Crates' : 'Cable Reels'}
                 </p>

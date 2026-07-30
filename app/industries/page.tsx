@@ -49,7 +49,7 @@ export default function IndustriesPage() {
         <section className="bg-white py-20 lg:py-28" aria-labelledby="industries-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                 Sectors
               </p>
@@ -119,7 +119,7 @@ export default function IndustriesPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
               <Reveal>
-                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#e8a020]">
+                <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
                   Common requirements
                 </p>
