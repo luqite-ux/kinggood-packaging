@@ -484,7 +484,7 @@ export const categories = [
     name: 'Wooden Pallets',
     description:
       'European standard, ISO standard and custom-sized solid wood and plywood pallets for global warehousing and export logistics.',
-    image: IMAGES.palletStack,
+    image: '/product-iso-pallet.png',
     products: products.filter((p) => p.category === 'pallets'),
   },
   {
@@ -492,7 +492,7 @@ export const categories = [
     name: 'Heavy-Duty Wood Crates',
     description:
       'Solid wood, plywood and open-frame crates for machinery, equipment and oversized industrial cargo.',
-    image: IMAGES.crateWarehouse,
+    image: '/product-solid-crate.png',
     products: products.filter((p) => p.category === 'crates'),
   },
   {
@@ -500,7 +500,7 @@ export const categories = [
     name: 'Cable Reels',
     description:
       'Project-specified wooden reel structures for cable storage, handling and transportation.',
-    image: IMAGES.cableReelLarge,
+    image: '/product-cable-reel.jpg',
     products: products.filter((p) => p.category === 'cable-reels'),
   },
 ]

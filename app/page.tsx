@@ -14,6 +14,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { Hero } from '@/components/home/hero'
 import { Marquee } from '@/components/home/marquee'
+import { CountUpStat } from '@/components/home/count-up-stat'
 import { Reveal } from '@/components/reveal'
 import {
   productsWithShortName as products,
@@ -135,7 +136,7 @@ export default function HomePage() {
               {metrics.map((m) => (
                 <div key={m.label} className="border-l-2 border-[#e8a020] pl-4">
                   <dt className="text-2xl font-bold tabular-nums text-white">
-                    {m.value}{m.suffix}
+                    <CountUpStat value={m.value} suffix={m.suffix} />
                   </dt>
                   <dd className="mt-1 text-xs font-bold uppercase tracking-widest text-white/70">
                     {m.label}
@@ -189,7 +190,7 @@ export default function HomePage() {
         <section className="bg-white py-20 lg:py-28" aria-labelledby="process-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-start">
-              <Reveal>
+              <Reveal x={-64} y={0}>
                 <SectionLabel>Custom Packaging Process</SectionLabel>
                 <h2
                   id="process-heading"
@@ -213,7 +214,7 @@ export default function HomePage() {
 
               <div className="mt-12 space-y-4 lg:mt-0">
                 {customPackagingSteps.slice(0, 4).map((step, i) => (
-                  <Reveal key={step.step} delay={i * 0.07}>
+                  <Reveal key={step.step} delay={i * 0.09} x={64} y={0}>
                     <div className="flex gap-4 rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-5">
                       <span
                         className="mt-0.5 shrink-0 text-sm font-bold tabular-nums text-[#8a5600]"
