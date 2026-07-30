@@ -3,15 +3,33 @@
 import { useState } from 'react'
 import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import { products } from '@/lib/site'
+import { getSupabaseClient } from '@/lib/supabase'
 
 export function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle')
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus('submitting')
-    // Simulated submit — connect to a backend or email service to receive enquiries.
-    setTimeout(() => setStatus('success'), 900)
+    const form = e.currentTarget
+    const values = new FormData(form)
+    const supabase = getSupabaseClient()
+    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
+    if (!supabase || !tenantId) return setStatus('error')
+    const product = String(values.get('product') || '')
+    const country = String(values.get('country') || '')
+    const { error } = await supabase.from('inquiries').insert({
+      tenant_id: tenantId,
+      name: String(values.get('name') || ''),
+      email: String(values.get('email') || ''),
+      company: String(values.get('company') || ''),
+      subject: product || 'Website enquiry',
+      message: [String(values.get('message') || ''), country && `Country / Region: ${country}`]
+        .filter(Boolean).join('\n\n'),
+    })
+    if (error) return setStatus('error')
+    form.reset()
+    setStatus('success')
   }
 
   if (status === 'success') {
@@ -121,6 +139,11 @@ export function ContactForm() {
           </>
         )}
       </button>
+      {status === 'error' && (
+        <p role="alert" className="mt-4 text-sm font-medium text-red-700">
+          We could not send your enquiry. Please try again or email kinggood66@163.com.
+        </p>
+      )}
 
       <style jsx>{`
         :global(.kg-input) {

@@ -6,9 +6,12 @@ import { ArrowLeft, ArrowRight, Phone, Mail, Check } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { Reveal } from '@/components/reveal'
-import { products, getRelatedProducts, company } from '@/lib/site'
+import { products, company } from '@/lib/site'
+import { fetchProductsData, getProductBySlug } from '@/lib/products-db'
 
 type Params = { slug: string }
+export const revalidate = 60
+export const dynamicParams = true
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }))
@@ -16,7 +19,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params
-  const product = products.find((p) => p.slug === slug)
+  const product = await getProductBySlug(slug)
   if (!product) return { title: 'Product not found' }
   return {
     title: product.name,
@@ -26,10 +29,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function ProductDetailPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params
-  const product = products.find((p) => p.slug === slug)
+  const product = await getProductBySlug(slug)
   if (!product) notFound()
 
-  const related = getRelatedProducts(product.slug, 3)
+  const allProducts = await fetchProductsData()
+  const related = allProducts.filter((item) => item.slug !== product.slug)
+    .sort((a) => a.category === product.category ? -1 : 1).slice(0, 3)
 
   return (
     <>

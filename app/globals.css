@@ -49,6 +49,11 @@
   --radius-3xl: calc(var(--radius) * 2.4);
 }
 
+.article-prose { color: #3a5068; font-size: 1rem; line-height: 1.8; }
+.article-prose h2, .article-prose h3 { color: #0f1b2d; font-weight: 700; margin: 2rem 0 0.75rem; }
+.article-prose p, .article-prose ul, .article-prose ol { margin: 0 0 1.25rem; }
+.article-prose a { color: #0d4077; text-decoration: underline; }
+
 :root {
   color-scheme: light;
 

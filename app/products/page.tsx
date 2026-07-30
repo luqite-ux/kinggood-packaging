@@ -7,6 +7,9 @@ import { SiteFooter } from '@/components/site-footer'
 import { PageHero } from '@/components/page-hero'
 import { Reveal } from '@/components/reveal'
 import { categories, company, IMAGES } from '@/lib/site'
+import { fetchProductsData } from '@/lib/products-db'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Products',
@@ -14,7 +17,12 @@ export const metadata: Metadata = {
     'Wooden pallets, heavy-duty wood crates and cable reels — configured around your cargo, handling equipment and destination requirements.',
 }
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const dbProducts = await fetchProductsData()
+  const productCategories = categories.map((category) => ({
+    ...category,
+    products: dbProducts.filter((product) => product.category === category.key),
+  }))
   return (
     <>
       <SiteHeader />
@@ -27,7 +35,7 @@ export default function ProductsPage() {
           crumbs={[{ label: 'Home', href: '/' }, { label: 'Products' }]}
         />
 
-        {categories.map((cat, catIndex) => (
+        {productCategories.map((cat, catIndex) => (
           <section
             key={cat.key}
             id={cat.key}

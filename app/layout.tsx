@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kinggood-packaging.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://kinggood-packaging.vercel.app'),
   title: {
     default: 'KINGGOOD | Engineered Wood Packaging for Global Logistics',
     template: '%s | KINGGOOD Packaging',
