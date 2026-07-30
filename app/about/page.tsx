@@ -126,20 +126,20 @@ export default function AboutPage() {
         {/* ── Stats band ───────────────────────────────────────────── */}
         <section className="bg-[#0d4077] py-14" aria-label="Company statistics">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <dl className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
               {stats.map((s, i) => (
                 <Reveal key={s.label} delay={i * 0.08}>
-                  <div className="border-l-2 border-[#e8a020] pl-4">
+                  <dl className="border-l-2 border-[#e8a020] pl-4">
                     <dt className="text-3xl font-bold tabular-nums text-white lg:text-4xl">
                       <CountUp value={s.value} suffix={s.suffix} />
                     </dt>
                     <dd className="mt-2 text-xs font-bold uppercase tracking-widest text-white/70">
                       {s.label}
                     </dd>
-                  </div>
+                  </dl>
                 </Reveal>
               ))}
-            </dl>
+            </div>
           </div>
         </section>
 

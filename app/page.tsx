@@ -40,9 +40,9 @@ const ICON_MAP: Record<string, React.FC<{ className?: string; 'aria-hidden'?: bo
   TrendingDown:  (p) => <TrendingDown {...p} />,
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionLabel({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
   return (
-    <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
+    <p className={`inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest ${dark ? 'text-[#e8a020]' : 'text-[#8a5600]'}`}>
       <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
       {children}
     </p>
@@ -281,7 +281,7 @@ export default function HomePage() {
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <SectionLabel>Our Facility</SectionLabel>
+              <SectionLabel dark>Our Facility</SectionLabel>
               <h2
                 id="factory-heading"
                 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-white text-balance sm:text-4xl"
