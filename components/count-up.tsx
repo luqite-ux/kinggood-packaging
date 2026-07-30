@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'motion/react'
+import { isCountableValue, parseCountValue } from '@/lib/count-up'
 
 type CountUpProps = {
   value: string
@@ -15,8 +16,8 @@ export function CountUp({ value, suffix = '', className }: CountUpProps) {
   const inView = useInView(ref, { once: true, margin: '-40px' })
   const [display, setDisplay] = useState('0')
 
-  const target = Number(value.replace(/[^0-9.]/g, ''))
-  const isNumeric = !Number.isNaN(target) && value.match(/[0-9]/)
+  const target = parseCountValue(value)
+  const isNumeric = isCountableValue(value)
   // Only group with thousands separators if the source value already uses them.
   const grouped = value.includes(',')
 

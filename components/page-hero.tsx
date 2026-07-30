@@ -14,14 +14,15 @@ type PageHeroProps = {
 
 export function PageHero({ eyebrow, title, description, image, crumbs }: PageHeroProps) {
   return (
-    <section className="relative flex min-h-[52vh] items-end overflow-hidden bg-ink text-white lg:min-h-[60vh]">
+    <section className="relative flex min-h-[52vh] items-end overflow-hidden bg-[#071829] text-white lg:min-h-[60vh]">
       <Image src={image} alt="" fill priority className="object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/90 to-ink/60" />
-      <div className="absolute inset-0 bg-ink/25" />
+      <div className="pointer-events-none absolute inset-0 bg-[#071829]/55" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#071829]/90 via-[#071829]/70 to-[#071829]/40" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#071829]/85 via-transparent to-[#071829]/45" />
       <div className="absolute inset-0 bg-grid-dark opacity-40" />
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-14 pt-28 sm:px-6 lg:px-8 lg:pb-20">
         {crumbs && (
-          <nav className="mb-5 flex items-center gap-1.5 text-sm text-white/60">
+          <nav className="mb-5 flex items-center gap-1.5 text-sm text-white/80">
             {crumbs.map((c, i) => (
               <span key={i} className="flex items-center gap-1.5">
                 {c.href ? (
@@ -37,7 +38,7 @@ export function PageHero({ eyebrow, title, description, image, crumbs }: PageHer
           </nav>
         )}
         {eyebrow && (
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+          <p className="text-sm font-semibold uppercase tracking-wider text-[#f0a51c]">
             {eyebrow}
           </p>
         )}
@@ -45,7 +46,7 @@ export function PageHero({ eyebrow, title, description, image, crumbs }: PageHer
           {title}
         </h1>
         {description && (
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70 text-pretty">
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85 text-pretty">
             {description}
           </p>
         )}
