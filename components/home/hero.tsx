@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { company, IMAGES } from '@/lib/site'
+import { getHeroBackgroundMotion } from '@/lib/hero-motion'
 
 const METRICS = [
   { value: 'Since 2010', label: 'In Operation' },
@@ -24,6 +25,9 @@ const fadeUp = {
 }
 
 export function Hero() {
+  const reduceMotion = useReducedMotion()
+  const backgroundMotion = getHeroBackgroundMotion(Boolean(reduceMotion))
+
   return (
     <section
       className="relative flex min-h-[100svh] items-center overflow-hidden"
@@ -31,13 +35,21 @@ export function Hero() {
     >
       {/* Background image */}
       <div className="pointer-events-none absolute inset-0">
-        <Image
-          src={IMAGES.factoryExterior}
-          alt=""
-          fill
-          priority
-          className="object-cover object-center"
-        />
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 will-change-transform"
+          initial={backgroundMotion.initial}
+          animate={backgroundMotion.animate}
+          transition={backgroundMotion.transition}
+        >
+          <Image
+            src={IMAGES.factoryExterior}
+            alt=""
+            fill
+            priority
+            className="object-cover object-center"
+          />
+        </motion.div>
         {/* Layered overlays — never applied to text container */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#071829]/95 via-[#071829]/80 to-[#071829]/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#071829]/70 via-transparent to-[#071829]/30" />
