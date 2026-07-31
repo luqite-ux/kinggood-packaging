@@ -38,7 +38,15 @@ export const metadata: Metadata = {
     description:
       'Wooden pallets, heavy-duty wood crates and cable reels for global logistics. 36,300 m² manufacturing facility in Nantong, Jiangsu.',
     type: 'website',
+    url: '/',
     siteName: 'KINGGOOD Packaging',
+    images: [{ url: '/factory-exterior.png', alt: 'KINGGOOD Packaging manufacturing facility' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'KINGGOOD | Engineered Wood Packaging for Global Logistics',
+    description: 'Wooden pallets, heavy-duty wood crates and cable reels for global logistics.',
+    images: ['/factory-exterior.png'],
   },
 }
 

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Contact',
   description:
     'Get in touch with KINGGOOD for export wooden pallets and wood crates. Request a quote by phone, email or enquiry form.',
+  alternates: { canonical: '/contact' },
+  openGraph: { url: '/contact', type: 'website' },
 }
 
 const details = [

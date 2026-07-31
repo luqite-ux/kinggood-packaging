@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   title: 'Products',
   description:
     'Wooden pallets, heavy-duty wood crates and cable reels — configured around your cargo, handling equipment and destination requirements.',
+  alternates: { canonical: '/products' },
+  openGraph: { url: '/products', type: 'website' },
 }
 
 export default async function ProductsPage() {

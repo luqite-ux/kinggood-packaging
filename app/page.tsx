@@ -30,6 +30,8 @@ import {
 
 export const metadata: Metadata = {
   title: 'KINGGOOD | Engineered Wood Packaging for Global Logistics',
+  alternates: { canonical: '/' },
+  openGraph: { url: '/' },
 }
 
 const ICON_MAP: Record<string, React.FC<{ className?: string; 'aria-hidden'?: boolean }>> = {

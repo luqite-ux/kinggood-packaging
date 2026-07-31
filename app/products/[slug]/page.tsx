@@ -20,6 +20,20 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: product.name,
     description: product.summary.slice(0, 155),
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      title: product.name,
+      description: product.summary.slice(0, 155),
+      type: 'website',
+      url: `/products/${product.slug}`,
+      images: [{ url: product.image, alt: product.name }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.name,
+      description: product.summary.slice(0, 155),
+      images: [product.image],
+    },
   }
 }
 

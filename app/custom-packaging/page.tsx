@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   title: 'Custom Packaging',
   description:
     'KINGGOOD designs custom wood packaging around your cargo dimensions, load requirements and destination. Non-standard pallets, crates and cable reels from enquiry to delivery.',
+  alternates: { canonical: '/custom-packaging' },
+  openGraph: { url: '/custom-packaging', type: 'website' },
 }
 
 const capabilities = [

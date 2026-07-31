@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Industries Served',
   description:
     'KINGGOOD supplies wooden pallets, custom crates and cable reels to machinery, automotive, electrical, electronics and logistics industries worldwide.',
+  alternates: { canonical: '/industries' },
+  openGraph: { url: '/industries', type: 'website' },
 }
 
 const ICON_MAP: Record<string, React.FC<{ className?: string; 'aria-hidden'?: boolean }>> = {
