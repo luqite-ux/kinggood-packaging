@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { fetchProductsData } from '@/lib/products-db'
 import { getPublishedArticles } from '@/lib/articles-db'
+
+export const dynamic = 'force-dynamic'
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://kinggood-packaging.vercel.app'
   const routes = ['', '/products', '/custom-packaging', '/industries', '/about', '/news', '/contact']
