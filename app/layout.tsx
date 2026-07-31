@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { company } from '@/lib/site'
+import { absoluteUrl, serializeJsonLd, SITE_URL } from '@/lib/seo'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -58,9 +60,32 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const organization = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
+    name: company.legalName,
+    alternateName: company.brand,
+    url: SITE_URL,
+    logo: absoluteUrl('/kinggood-logo.png'),
+    image: absoluteUrl('/factory-exterior.png'),
+    foundingDate: company.founded,
+    email: company.email,
+    telephone: company.phoneRaw,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: company.address,
+      addressLocality: 'Nantong',
+      addressRegion: 'Jiangsu',
+      addressCountry: 'CN',
+    },
+  }
   return (
     <html lang="en" className={`bg-background ${inter.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(organization) }} />
+        {children}
+      </body>
     </html>
   )
 }

@@ -8,6 +8,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { Reveal } from '@/components/reveal'
 import { company } from '@/lib/site'
 import { fetchProductsData, getProductBySlug } from '@/lib/products-db'
+import { absoluteUrl, serializeJsonLd, SITE_URL } from '@/lib/seo'
 
 type Params = { slug: string }
 export const revalidate = 60
@@ -46,8 +47,36 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
   const related = allProducts.filter((item) => item.slug !== product.slug)
     .sort((a) => a.category === product.category ? -1 : 1).slice(0, 3)
 
+  const productUrl = `${SITE_URL}/products/${product.slug}`
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Product',
+        '@id': `${productUrl}#product`,
+        name: product.name,
+        description: product.summary,
+        image: [absoluteUrl(product.image), ...(product.gallery || []).map(absoluteUrl)],
+        category: product.categoryLabel,
+        sku: product.slug,
+        brand: { '@type': 'Brand', name: company.brand },
+        manufacturer: { '@id': `${SITE_URL}/#organization` },
+        url: productUrl,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Products', item: `${SITE_URL}/products` },
+          { '@type': 'ListItem', position: 3, name: product.name, item: productUrl },
+        ],
+      },
+    ],
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
       <SiteHeader />
       <main>
 

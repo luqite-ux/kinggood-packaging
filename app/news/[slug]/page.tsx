@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getArticleBySlug } from '@/lib/articles-db'
 import { NewsArticleClient } from './news-article-client'
+import { absoluteUrl, serializeJsonLd, SITE_URL } from '@/lib/seo'
 export const revalidate = 60
 export const dynamicParams = true
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -32,5 +33,35 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const article = await getArticleBySlug((await params).slug)
   if (!article) notFound()
-  return <NewsArticleClient article={article} />
+  const articleUrl = `${SITE_URL}/news/${article.slug}`
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'NewsArticle',
+        headline: article.title,
+        description: article.excerpt,
+        image: article.coverImage ? [absoluteUrl(article.coverImage)] : undefined,
+        datePublished: article.publishedAt || undefined,
+        dateModified: article.publishedAt || undefined,
+        mainEntityOfPage: articleUrl,
+        author: { '@id': `${SITE_URL}/#organization` },
+        publisher: { '@id': `${SITE_URL}/#organization` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'News', item: `${SITE_URL}/news` },
+          { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
+        ],
+      },
+    ],
+  }
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
+      <NewsArticleClient article={article} />
+    </>
+  )
 }
