@@ -6,16 +6,12 @@ import { ArrowLeft, ArrowRight, Phone, Mail, Check } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { Reveal } from '@/components/reveal'
-import { products, company } from '@/lib/site'
+import { company } from '@/lib/site'
 import { fetchProductsData, getProductBySlug } from '@/lib/products-db'
 
 type Params = { slug: string }
 export const revalidate = 60
 export const dynamicParams = true
-
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }))
-}
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params
