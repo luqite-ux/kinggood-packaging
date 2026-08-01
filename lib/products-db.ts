@@ -42,6 +42,14 @@ function mapProduct(row: ProductRow): Product {
   }
 }
 
+export function resolveProductRows(
+  data: ProductRow[] | null,
+  error: unknown,
+): Product[] {
+  if (error || !data) return fallbackProducts
+  return data.map(mapProduct)
+}
+
 export async function fetchProductsData(locale: Locale = defaultLocale): Promise<Product[]> {
   const supabase = getSupabaseClient()
   const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
@@ -51,9 +59,7 @@ export async function fetchProductsData(locale: Locale = defaultLocale): Promise
   const { data, error } = await supabase.from('products')
     .select('slug,updated_at,name,description,overview,image_url,category_slug,features,applications,specs,extra_data')
     .eq('tenant_id', tenantId).eq('is_active', true).order('sort_order')
-  const products = error || !data?.length
-    ? fallbackProducts
-    : (data as ProductRow[]).map(mapProduct)
+  const products = resolveProductRows(data as ProductRow[] | null, error)
   return products.map((product) => localizeProduct(product, locale))
 }
 

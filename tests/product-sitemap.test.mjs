@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
+test('preserves a successful empty active product set instead of publishing fallback products', async () => {
+  const { resolveProductRows } = await import('../lib/products-db.ts')
+
+  assert.equal(typeof resolveProductRows, 'function')
+  assert.deepEqual(resolveProductRows([], null), [])
+  assert.ok(resolveProductRows(null, { message: 'query failed' }).length > 0)
+})
+
 test('maps Supabase updated_at to a product sitemap updatedAt value', async () => {
   const { mapSitemapProductRow } = await import('../lib/products-db.ts')
 

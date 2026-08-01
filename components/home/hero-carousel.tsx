@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { Pause, Play, ChevronLeft, ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState, type FocusEvent } from 'react'
+import { useEffect, useState } from 'react'
 import type { Dictionary } from '@/lib/i18n/types'
 import { formatSlideLabel, HERO_SLIDES, nextSlide, previousSlide } from '@/lib/hero-carousel'
 import { getHeroCarouselBackgroundMotion, getHeroCarouselMotion } from '@/lib/hero-motion'
@@ -11,15 +11,15 @@ import { useHydratedReducedMotion } from '@/lib/use-hydrated-reduced-motion'
 
 type HeroCarouselProps = {
   labels: Dictionary['carousel']
+  isInteractionPaused: boolean
 }
 
 const AUTOPLAY_INTERVAL = 6_000
 
-export function HeroCarousel({ labels }: HeroCarouselProps) {
+export function HeroCarousel({ labels, isInteractionPaused }: HeroCarouselProps) {
   const reduceMotion = useHydratedReducedMotion()
   const [activeIndex, setActiveIndex] = useState(0)
   const [isManuallyPaused, setIsManuallyPaused] = useState(false)
-  const [isInteractionPaused, setIsInteractionPaused] = useState(false)
   const [isDocumentHidden, setIsDocumentHidden] = useState(false)
   const isPaused = Boolean(reduceMotion) || isManuallyPaused || isInteractionPaused || isDocumentHidden
   const activeSlide = HERO_SLIDES[activeIndex]
@@ -48,12 +48,6 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
     setActiveIndex(index)
   }
 
-  function handleBlur(event: FocusEvent<HTMLElement>) {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      setIsInteractionPaused(false)
-    }
-  }
-
   const localizedAlt = labels.imageAlt[activeSlide.altKey]
 
   return (
@@ -61,11 +55,6 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
       className="absolute inset-0"
       role="region"
       aria-label={labels.ariaLabel}
-      aria-roledescription="carousel"
-      onPointerEnter={() => setIsInteractionPaused(true)}
-      onPointerLeave={() => setIsInteractionPaused(false)}
-      onFocus={() => setIsInteractionPaused(true)}
-      onBlur={handleBlur}
     >
       <AnimatePresence initial={false} mode="sync">
         <motion.div

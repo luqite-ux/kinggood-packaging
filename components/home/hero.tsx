@@ -3,7 +3,13 @@
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
+import { useReducer, type FocusEvent } from 'react'
 import { HeroCarousel } from '@/components/home/hero-carousel'
+import {
+  INITIAL_HERO_INTERACTION_STATE,
+  isHeroInteractionPaused,
+  reduceHeroInteraction,
+} from '@/lib/hero-carousel'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
@@ -26,6 +32,10 @@ type HeroProps = {
 
 export function Hero({ locale = 'en', dictionary = defaultDictionary }: HeroProps) {
   const reduceMotion = useHydratedReducedMotion()
+  const [interaction, dispatchInteraction] = useReducer(
+    reduceHeroInteraction,
+    INITIAL_HERO_INTERACTION_STATE,
+  )
   const metrics = [
     dictionary.hero.metrics.operating,
     dictionary.hero.metrics.facilityArea,
@@ -33,12 +43,25 @@ export function Hero({ locale = 'en', dictionary = defaultDictionary }: HeroProp
     dictionary.hero.metrics.palletsPerDay,
   ]
 
+  function handleBlur(event: FocusEvent<HTMLElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      dispatchInteraction({ type: 'focus-leave' })
+    }
+  }
+
   return (
     <section
       className="relative flex min-h-[100svh] items-center overflow-hidden"
       aria-label={dictionary.hero.ariaLabel}
+      onPointerEnter={() => dispatchInteraction({ type: 'pointer-enter' })}
+      onPointerLeave={() => dispatchInteraction({ type: 'pointer-leave' })}
+      onFocus={() => dispatchInteraction({ type: 'focus-enter' })}
+      onBlur={handleBlur}
     >
-      <HeroCarousel labels={dictionary.carousel} />
+      <HeroCarousel
+        labels={dictionary.carousel}
+        isInteractionPaused={isHeroInteractionPaused(interaction)}
+      />
 
       <motion.div
         aria-hidden

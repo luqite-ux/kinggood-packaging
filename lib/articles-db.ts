@@ -1,4 +1,5 @@
 import type { Locale } from '@/lib/i18n/config'
+import { sanitizeArticleHtml } from './article-html.ts'
 
 type ArticleText = {
   title: string
@@ -43,6 +44,13 @@ function localizedText(value: string | null | undefined): string | undefined {
   return value?.trim() ? value : undefined
 }
 
+function sanitizedHtml(value: string | null | undefined): string | undefined {
+  const normalized = localizedText(value)
+  if (!normalized) return undefined
+  const sanitized = sanitizeArticleHtml(normalized)
+  return sanitized.trim() ? sanitized : undefined
+}
+
 const articleLocales = ['en', 'zh', 'de', 'es'] as const satisfies readonly Locale[]
 
 function sanitizeArticleI18nField(value: unknown): ArticleI18nField {
@@ -65,7 +73,9 @@ export function mapArticleRow(row: ArticleRow): Article {
   const contents = sanitizeArticleI18nField(row.content_i18n)
   const title = textOrFallback(titles.en, textOrFallback(row.title_en, row.title || ''))
   const excerpt = textOrFallback(excerpts.en, textOrFallback(row.excerpt_en, row.excerpt || ''))
-  const content = textOrFallback(contents.en, textOrFallback(row.content_en, row.content || ''))
+  const legacyContent = sanitizedHtml(row.content)
+  const englishContent = sanitizedHtml(row.content_en) || legacyContent
+  const content = sanitizedHtml(contents.en) || englishContent || ''
 
   return {
     slug: row.slug,
@@ -79,17 +89,17 @@ export function mapArticleRow(row: ArticleRow): Article {
       zh: {
         title: localizedText(titles.zh) || localizedText(row.title),
         excerpt: localizedText(excerpts.zh) || localizedText(row.excerpt),
-        content: localizedText(contents.zh) || localizedText(row.content),
+        content: sanitizedHtml(contents.zh) || legacyContent,
       },
       de: {
         title: localizedText(titles.de),
         excerpt: localizedText(excerpts.de),
-        content: localizedText(contents.de),
+        content: sanitizedHtml(contents.de),
       },
       es: {
         title: localizedText(titles.es),
         excerpt: localizedText(excerpts.es),
-        content: localizedText(contents.es),
+        content: sanitizedHtml(contents.es),
       },
     },
   }

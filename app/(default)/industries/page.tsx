@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { IndustriesPageBody } from '@/components/localized/industries-page'
+import { loadDefaultProductPageData } from '@/lib/default-product-page-data'
 import { defaultLocale } from '@/lib/i18n/config'
-import { getDictionary } from '@/lib/i18n/get-dictionary'
 import { localizedMetadata } from '@/lib/seo'
+
+export const revalidate = 60
 
 export const metadata: Metadata = localizedMetadata('/industries', defaultLocale, {
   title: 'Industries Served',
@@ -13,7 +15,6 @@ export const metadata: Metadata = localizedMetadata('/industries', defaultLocale
 })
 
 export default async function IndustriesPage() {
-  return (
-    <IndustriesPageBody locale={defaultLocale} dictionary={await getDictionary(defaultLocale)} />
-  )
+  const { dictionary, products } = await loadDefaultProductPageData()
+  return <IndustriesPageBody locale={defaultLocale} dictionary={dictionary} products={products} />
 }

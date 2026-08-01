@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { ContactPageBody } from '@/components/localized/contact-page'
+import { loadDefaultProductPageData } from '@/lib/default-product-page-data'
 import { defaultLocale } from '@/lib/i18n/config'
-import { getDictionary } from '@/lib/i18n/get-dictionary'
 import { localizedMetadata } from '@/lib/seo'
+
+export const revalidate = 60
 
 export const metadata: Metadata = localizedMetadata('/contact', defaultLocale, {
   title: 'Contact',
@@ -13,5 +15,6 @@ export const metadata: Metadata = localizedMetadata('/contact', defaultLocale, {
 })
 
 export default async function ContactPage() {
-  return <ContactPageBody locale={defaultLocale} dictionary={await getDictionary(defaultLocale)} />
+  const { dictionary, products } = await loadDefaultProductPageData()
+  return <ContactPageBody locale={defaultLocale} dictionary={dictionary} products={products} />
 }
