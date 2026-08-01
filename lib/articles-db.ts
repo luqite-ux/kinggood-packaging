@@ -15,6 +15,7 @@ export type Article = {
   content: string
   coverImage: string | null
   publishedAt: string | null
+  updatedAt: string | null
   translations?: Partial<Record<Exclude<Locale, 'en'>, Partial<ArticleText>>>
 }
 
@@ -31,6 +32,7 @@ export type ArticleRow = {
   content_i18n: unknown
   featured_image: string | null
   published_at: string | null
+  updated_at?: string | null
 }
 
 function textOrFallback(value: string | null | undefined, fallback: string): string {
@@ -72,6 +74,7 @@ export function mapArticleRow(row: ArticleRow): Article {
     content,
     coverImage: row.featured_image,
     publishedAt: row.published_at,
+    updatedAt: row.updated_at || row.published_at,
     translations: {
       zh: {
         title: localizedText(titles.zh) || localizedText(row.title),
@@ -124,7 +127,7 @@ export async function getPublishedArticles(): Promise<Article[]> {
   const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
   if (!supabase || !tenantId) return []
   const { data, error } = await supabase.from('articles')
-    .select('slug,title,title_en,title_i18n,excerpt,excerpt_en,excerpt_i18n,content,content_en,content_i18n,featured_image,published_at')
+    .select('slug,title,title_en,title_i18n,excerpt,excerpt_en,excerpt_i18n,content,content_en,content_i18n,featured_image,published_at,updated_at')
     .eq('tenant_id', tenantId).eq('is_published', true).order('published_at', { ascending: false })
   if (error || !data) return []
   return (data as ArticleRow[]).map(mapArticleRow)

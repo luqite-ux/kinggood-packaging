@@ -2,9 +2,11 @@ import { products as fallbackProducts, type Product } from '@/lib/site'
 import { getSupabaseClient } from '@/lib/supabase'
 import { defaultLocale, type Locale } from '@/lib/i18n/config'
 import { localizeProduct } from '@/lib/i18n/products'
+import { strictSitemapRecords } from '@/lib/seo'
 
 type ProductRow = {
   slug: string
+  updated_at: string | null
   name: string
   description: string | null
   overview: string | null
@@ -22,6 +24,7 @@ function mapProduct(row: ProductRow): Product {
   return {
     ...(fallback || fallbackProducts[0]),
     slug: row.slug,
+    updatedAt: row.updated_at,
     name: row.name,
     summary: row.description || fallback?.summary || '',
     overview: row.overview || fallback?.overview || '',
@@ -46,7 +49,7 @@ export async function fetchProductsData(locale: Locale = defaultLocale): Promise
     return fallbackProducts.map((product) => localizeProduct(product, locale))
   }
   const { data, error } = await supabase.from('products')
-    .select('slug,name,description,overview,image_url,category_slug,features,applications,specs,extra_data')
+    .select('slug,updated_at,name,description,overview,image_url,category_slug,features,applications,specs,extra_data')
     .eq('tenant_id', tenantId).eq('is_active', true).order('sort_order')
   const products = error || !data?.length
     ? fallbackProducts
@@ -54,6 +57,22 @@ export async function fetchProductsData(locale: Locale = defaultLocale): Promise
   return products.map((product) => localizeProduct(product, locale))
 }
 
+type SitemapProduct = Pick<Product, 'slug' | 'updatedAt'>
+
 export async function getProductBySlug(slug: string, locale: Locale = defaultLocale) {
   return (await fetchProductsData(locale)).find((product) => product.slug === slug) || null
+}
+
+export async function fetchActiveProductsForSitemap(): Promise<SitemapProduct[]> {
+  const supabase = getSupabaseClient()
+  const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
+  if (!supabase || !tenantId) return []
+
+  const { data, error } = await supabase.from('products')
+    .select('slug,updated_at')
+    .eq('tenant_id', tenantId)
+    .eq('is_active', true)
+    .order('sort_order')
+
+  return strictSitemapRecords(data as SitemapProduct[] | null, error)
 }

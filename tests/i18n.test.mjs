@@ -201,6 +201,7 @@ test('uses translated product presentation while preserving the stable slug', ()
   assert.equal(result.slug, product.slug)
   assert.notEqual(result.name, '')
   assert.notEqual(result.name, product.name)
+  assert.equal(result.categoryLabel, 'Holzpaletten')
 })
 
 test('falls back to English for a product field without a localized overlay', () => {

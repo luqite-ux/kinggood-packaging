@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { SESSION_COOKIE } from '@/lib/admin-session'
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isPublic = pathname.startsWith('/admin/login') || pathname.startsWith('/admin/logout')

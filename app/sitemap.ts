@@ -1,17 +1,36 @@
 import type { MetadataRoute } from 'next'
-import { fetchProductsData } from '@/lib/products-db'
+import { fetchActiveProductsForSitemap } from '@/lib/products-db'
 import { getPublishedArticles } from '@/lib/articles-db'
+import { buildLocalizedSitemapEntries } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
+const staticRoutes = [
+  '/',
+  '/products',
+  '/custom-packaging',
+  '/industries',
+  '/about',
+  '/news',
+  '/contact',
+]
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://kinggood-packaging.vercel.app'
-  const routes = ['', '/products', '/custom-packaging', '/industries', '/about', '/news', '/contact']
-  const products = await fetchProductsData()
-  const articles = await getPublishedArticles()
+  const [products, articles] = await Promise.all([
+    fetchActiveProductsForSitemap(),
+    getPublishedArticles(),
+  ])
+
   return [
-    ...routes.map(url => ({ url: base + url, lastModified: new Date() })),
-    ...products.map(item => ({ url: `${base}/products/${item.slug}`, lastModified: new Date() })),
-    ...articles.map(item => ({ url: `${base}/news/${item.slug}`, lastModified: item.publishedAt ? new Date(item.publishedAt) : new Date() })),
+    ...staticRoutes.flatMap((path) => buildLocalizedSitemapEntries(path)),
+    ...products.flatMap((product) =>
+      buildLocalizedSitemapEntries(`/products/${product.slug}`, product.updatedAt),
+    ),
+    ...articles.flatMap((article) =>
+      buildLocalizedSitemapEntries(
+        `/news/${article.slug}`,
+        article.updatedAt || article.publishedAt,
+      ),
+    ),
   ]
 }

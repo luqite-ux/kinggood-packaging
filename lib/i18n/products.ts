@@ -1,5 +1,6 @@
 import type { Product, ProductHighlight } from '../site'
 import type { Locale } from './config'
+import { localizedContent } from './content.ts'
 
 type ProductOverlay = {
   name: string
@@ -359,10 +360,14 @@ function localizedHighlights(
 
 export function localizeProduct(product: Product, locale: Locale): Product {
   const overlay = locale === 'en' ? undefined : productOverlays[locale][product.slug]
+  const categoryLabel = localizedContent[locale].shared.categories.find(
+    (category) => category.key === product.category,
+  )?.name
 
   return {
     ...product,
     gallery: [...product.gallery],
+    categoryLabel: textOrFallback(categoryLabel, product.categoryLabel),
     name: textOrFallback(overlay?.name, product.name),
     tagline: textOrFallback(overlay?.tagline, product.tagline),
     summary: textOrFallback(overlay?.summary, product.summary),

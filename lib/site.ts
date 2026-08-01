@@ -67,6 +67,7 @@ export type ProductSpec = { label: string; value: string }
 export type ProductHighlight = { title: string; description: string }
 export type Product = {
   slug: string
+  updatedAt?: string | null
   name: string
   category: 'pallets' | 'crates' | 'cable-reels'
   categoryLabel: string
