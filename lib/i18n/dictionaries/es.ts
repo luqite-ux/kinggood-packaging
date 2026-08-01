@@ -14,7 +14,12 @@ const es = {
   hero: {
     ariaLabel: 'Sección principal', eyebrow: 'Kinggood Packaging Materials (Nantong) Co., Ltd.', title: 'Embalaje de madera diseñado', titleHighlight: 'para la logística global',
     description: 'KINGGOOD diseña y fabrica palés de madera, cajas de madera de alta resistencia y carretes para cables destinados al transporte industrial, el almacenamiento y la logística de exportación. Las soluciones se pueden configurar según las dimensiones de la carga, el peso, los equipos de manipulación y los requisitos del destino.',
-    metrics: { operating: 'En operación', facilityArea: 'Superficie de planta', production: 'Producción', palletsPerDay: 'Palés / día' },
+    metrics: {
+      operating: { value: 'Desde 2010', label: 'En operación' },
+      facilityArea: { value: '36.300 m²', label: 'Superficie de planta' },
+      production: { value: '5 talleres', label: 'Producción' },
+      palletsPerDay: { value: '3.000+', label: 'Palés / día' },
+    },
   },
   footer: {
     description: 'Kinggood Packaging Materials (Nantong) Co., Ltd. — fabricante de palés de madera, cajas de madera de alta resistencia y carretes para cables para la logística global. Fundada en 2010.',
@@ -40,7 +45,11 @@ const es = {
     notFoundTitle: 'Página no encontrada', notFoundDescription: 'La página solicitada no está disponible o puede haberse movido.',
     unavailableTitle: 'Contenido no disponible', unavailableDescription: 'Inténtelo de nuevo en breve o contacte con nuestro equipo para obtener ayuda.',
   },
-  carousel: { previousSlide: 'Diapositiva anterior', nextSlide: 'Siguiente diapositiva', pause: 'Pausar carrusel', play: 'Reproducir carrusel', slideLabel: 'Diapositiva' },
+  carousel: {
+    previousSlide: 'Diapositiva anterior', nextSlide: 'Siguiente diapositiva', pause: 'Pausar carrusel', play: 'Reproducir carrusel', slideLabel: 'Diapositiva',
+    ariaLabel: 'Carrusel de imágenes de fábrica', goToSlide: 'Ir a la diapositiva {slide}',
+    imageAlt: { factoryExterior: 'Vista exterior de la fábrica de KINGGOOD', factoryProduction: 'Taller de producción de la fábrica de KINGGOOD' },
+  },
   productOverlays: {
     category: 'Categoría', materials: 'Materiales', dimensions: 'Dimensiones', applications: 'Aplicaciones', specifications: 'Especificaciones', handlingNotes: 'Notas de manipulación',
     requestQuote: 'Solicitar presupuesto', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',

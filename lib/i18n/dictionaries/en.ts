@@ -17,7 +17,12 @@ const en = {
     ariaLabel: 'Hero', eyebrow: 'Kinggood Packaging Materials (Nantong) Co., Ltd.',
     title: 'Engineered Wood Packaging', titleHighlight: 'for Global Logistics',
     description: 'KINGGOOD designs and manufactures wooden pallets, heavy-duty wood crates and cable reels for industrial transportation, warehousing and export logistics. Solutions can be configured around cargo dimensions, load, handling equipment and destination requirements.',
-    metrics: { operating: 'In Operation', facilityArea: 'Facility Area', production: 'Production', palletsPerDay: 'Pallets / Day' },
+    metrics: {
+      operating: { value: 'Since 2010', label: 'In Operation' },
+      facilityArea: { value: '36,300 m²', label: 'Facility Area' },
+      production: { value: '5 Workshops', label: 'Production' },
+      palletsPerDay: { value: '3,000+', label: 'Pallets / Day' },
+    },
   },
   footer: {
     description: 'Kinggood Packaging Materials (Nantong) Co., Ltd. — manufacturers of wooden pallets, heavy-duty wood crates and cable reels for global logistics. Founded 2010.',
@@ -44,7 +49,11 @@ const en = {
     notFoundTitle: 'Page not found', notFoundDescription: 'The page you requested is unavailable or may have moved.',
     unavailableTitle: 'Content unavailable', unavailableDescription: 'Please try again shortly or contact our team for assistance.',
   },
-  carousel: { previousSlide: 'Previous slide', nextSlide: 'Next slide', pause: 'Pause carousel', play: 'Play carousel', slideLabel: 'Slide' },
+  carousel: {
+    previousSlide: 'Previous slide', nextSlide: 'Next slide', pause: 'Pause carousel', play: 'Play carousel', slideLabel: 'Slide',
+    ariaLabel: 'Factory image carousel', goToSlide: 'Go to slide {slide}',
+    imageAlt: { factoryExterior: 'Exterior view of the KINGGOOD factory', factoryProduction: 'KINGGOOD factory production workshop' },
+  },
   productOverlays: {
     category: 'Category', materials: 'Materials', dimensions: 'Dimensions', applications: 'Applications', specifications: 'Specifications',
     handlingNotes: 'Handling Notes', requestQuote: 'Request a Quote', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',

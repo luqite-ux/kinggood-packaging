@@ -14,7 +14,12 @@ const zh = {
   hero: {
     ariaLabel: '首屏展示', eyebrow: '金固德包装材料（南通）股份有限公司', title: '工程化木质包装', titleHighlight: '服务全球物流',
     description: 'KINGGOOD 专注于为工业运输、仓储及出口物流设计和制造木托盘、重型木箱和电缆盘。我们可根据货物尺寸、载荷、搬运设备和目的地要求配置包装解决方案。',
-    metrics: { operating: '运营至今', facilityArea: '厂区面积', production: '生产车间', palletsPerDay: '托盘 / 天' },
+    metrics: {
+      operating: { value: '始于 2010 年', label: '运营至今' },
+      facilityArea: { value: '36,300 平方米', label: '厂区面积' },
+      production: { value: '5 个车间', label: '生产车间' },
+      palletsPerDay: { value: '3,000+', label: '托盘 / 天' },
+    },
   },
   footer: {
     description: '金固德包装材料（南通）股份有限公司——面向全球物流的木托盘、重型木箱和电缆盘制造商，成立于 2010 年。',
@@ -40,7 +45,11 @@ const zh = {
     notFoundTitle: '未找到页面', notFoundDescription: '您请求的页面不可用或可能已移动。',
     unavailableTitle: '内容暂不可用', unavailableDescription: '请稍后重试，或联系我们的团队获取帮助。',
   },
-  carousel: { previousSlide: '上一张', nextSlide: '下一张', pause: '暂停轮播', play: '播放轮播', slideLabel: '第' },
+  carousel: {
+    previousSlide: '上一张', nextSlide: '下一张', pause: '暂停轮播', play: '播放轮播', slideLabel: '图片',
+    ariaLabel: '工厂图片轮播', goToSlide: '转到第 {slide} 张图片',
+    imageAlt: { factoryExterior: 'KINGGOOD 工厂外景', factoryProduction: 'KINGGOOD 工厂生产车间' },
+  },
   productOverlays: {
     category: '类别', materials: '材料', dimensions: '尺寸', applications: '应用', specifications: '技术规格', handlingNotes: '操作注意事项',
     requestQuote: '获取报价', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',

@@ -14,7 +14,12 @@ const de = {
   hero: {
     ariaLabel: 'Titelbereich', eyebrow: 'Kinggood Packaging Materials (Nantong) Co., Ltd.', title: 'Technische Holzverpackungen', titleHighlight: 'für die globale Logistik',
     description: 'KINGGOOD entwickelt und produziert Holzpaletten, Schwerlast-Holzkisten und Kabeltrommeln für industrielle Transporte, Lagerhaltung und Exportlogistik. Lösungen lassen sich an Frachtmaße, Lasten, Fördertechnik und Anforderungen des Bestimmungslands anpassen.',
-    metrics: { operating: 'Im Betrieb', facilityArea: 'Werksfläche', production: 'Produktion', palletsPerDay: 'Paletten / Tag' },
+    metrics: {
+      operating: { value: 'Seit 2010', label: 'Im Betrieb' },
+      facilityArea: { value: '36.300 m²', label: 'Werksfläche' },
+      production: { value: '5 Werkstätten', label: 'Produktion' },
+      palletsPerDay: { value: '3.000+', label: 'Paletten / Tag' },
+    },
   },
   footer: {
     description: 'Kinggood Packaging Materials (Nantong) Co., Ltd. — Hersteller von Holzpaletten, Schwerlast-Holzkisten und Kabeltrommeln für die globale Logistik. Gegründet 2010.',
@@ -40,7 +45,11 @@ const de = {
     notFoundTitle: 'Seite nicht gefunden', notFoundDescription: 'Die angeforderte Seite ist nicht verfügbar oder wurde möglicherweise verschoben.',
     unavailableTitle: 'Inhalt nicht verfügbar', unavailableDescription: 'Bitte versuchen Sie es in Kürze erneut oder kontaktieren Sie unser Team.',
   },
-  carousel: { previousSlide: 'Vorheriges Bild', nextSlide: 'Nächstes Bild', pause: 'Karussell anhalten', play: 'Karussell starten', slideLabel: 'Folie' },
+  carousel: {
+    previousSlide: 'Vorheriges Bild', nextSlide: 'Nächstes Bild', pause: 'Karussell anhalten', play: 'Karussell starten', slideLabel: 'Folie',
+    ariaLabel: 'Karussell mit Fabrikbildern', goToSlide: 'Zu Folie {slide} wechseln',
+    imageAlt: { factoryExterior: 'Außenansicht der KINGGOOD Fabrik', factoryProduction: 'Produktionswerkstatt der KINGGOOD Fabrik' },
+  },
   productOverlays: {
     category: 'Kategorie', materials: 'Materialien', dimensions: 'Abmessungen', applications: 'Anwendungen', specifications: 'Spezifikationen', handlingNotes: 'Hinweise zur Handhabung',
     requestQuote: 'Angebot anfordern', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',

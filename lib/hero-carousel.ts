@@ -8,6 +8,10 @@ export const HERO_SLIDES = Object.freeze([
   Object.freeze({ src: '/factory-production.png', altKey: 'factoryProduction' }),
 ] satisfies readonly HeroSlide[])
 
+export function formatSlideLabel(template: string, index: number) {
+  return template.replace('{slide}', String(index + 1))
+}
+
 function validCount(count: number) {
   return Number.isInteger(count) && count > 0
 }

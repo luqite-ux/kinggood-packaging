@@ -5,8 +5,8 @@ import { Pause, Play, ChevronLeft, ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useState, type FocusEvent } from 'react'
 import type { Dictionary } from '@/lib/i18n/types'
-import { HERO_SLIDES, nextSlide, previousSlide } from '@/lib/hero-carousel'
-import { getHeroCarouselMotion } from '@/lib/hero-motion'
+import { formatSlideLabel, HERO_SLIDES, nextSlide, previousSlide } from '@/lib/hero-carousel'
+import { getHeroCarouselBackgroundMotion, getHeroCarouselMotion } from '@/lib/hero-motion'
 
 type HeroCarouselProps = {
   labels: Dictionary['carousel']
@@ -23,6 +23,7 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
   const isPaused = Boolean(reduceMotion) || isManuallyPaused || isInteractionPaused || isDocumentHidden
   const activeSlide = HERO_SLIDES[activeIndex]
   const slideMotion = getHeroCarouselMotion(Boolean(reduceMotion))
+  const backgroundMotion = getHeroCarouselBackgroundMotion(Boolean(reduceMotion))
 
   useEffect(() => {
     const updateDocumentVisibility = () => setIsDocumentHidden(document.hidden)
@@ -52,11 +53,13 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
     }
   }
 
-  const localizedAlt = `${labels.slideLabel} ${activeIndex + 1}`
+  const localizedAlt = labels.imageAlt[activeSlide.altKey]
 
   return (
     <div
       className="absolute inset-0"
+      role="region"
+      aria-label={labels.ariaLabel}
       aria-roledescription="carousel"
       onPointerEnter={() => setIsInteractionPaused(true)}
       onPointerLeave={() => setIsInteractionPaused(false)}
@@ -72,14 +75,21 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
           exit={slideMotion.exit}
           transition={slideMotion.transition}
         >
-          <Image
-            fill
+          <motion.div
             aria-hidden
-            alt=""
-            className="scale-110 object-cover blur-xl"
-            sizes="100vw"
-            src={activeSlide.src}
-          />
+            className="absolute inset-0 will-change-transform"
+            initial={backgroundMotion.initial}
+            animate={backgroundMotion.animate}
+            transition={backgroundMotion.transition}
+          >
+            <Image
+              fill
+              alt=""
+              className="scale-110 object-cover blur-xl"
+              sizes="100vw"
+              src={activeSlide.src}
+            />
+          </motion.div>
           <Image
             fill
             alt={localizedAlt}
@@ -108,7 +118,7 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
             <button
               key={slide.src}
               type="button"
-              aria-label={`${labels.slideLabel} ${index + 1}`}
+              aria-label={formatSlideLabel(labels.goToSlide, index)}
               aria-current={index === activeIndex ? 'true' : undefined}
               className={`h-2.5 rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8a020] ${
                 index === activeIndex ? 'w-6 bg-[#e8a020]' : 'w-2.5 bg-white/60 hover:bg-white'

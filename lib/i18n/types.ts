@@ -36,10 +36,10 @@ export type Dictionary = {
     titleHighlight: string
     description: string
     metrics: {
-      operating: string
-      facilityArea: string
-      production: string
-      palletsPerDay: string
+      operating: { value: string; label: string }
+      facilityArea: { value: string; label: string }
+      production: { value: string; label: string }
+      palletsPerDay: { value: string; label: string }
     }
   }
   footer: {
@@ -90,6 +90,12 @@ export type Dictionary = {
     pause: string
     play: string
     slideLabel: string
+    ariaLabel: string
+    goToSlide: string
+    imageAlt: {
+      factoryExterior: string
+      factoryProduction: string
+    }
   }
   productOverlays: {
     category: string

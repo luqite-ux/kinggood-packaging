@@ -26,10 +26,10 @@ type HeroProps = {
 export function Hero({ locale = 'en', dictionary = defaultDictionary }: HeroProps) {
   const reduceMotion = useReducedMotion()
   const metrics = [
-    { value: 'Since 2010', label: dictionary.hero.metrics.operating },
-    { value: '36,300 m²', label: dictionary.hero.metrics.facilityArea },
-    { value: '5 Workshops', label: dictionary.hero.metrics.production },
-    { value: '3,000+', label: dictionary.hero.metrics.palletsPerDay },
+    dictionary.hero.metrics.operating,
+    dictionary.hero.metrics.facilityArea,
+    dictionary.hero.metrics.production,
+    dictionary.hero.metrics.palletsPerDay,
   ]
 
   return (
