@@ -10,7 +10,7 @@ import { localizePath, type Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
 import { cn } from '@/lib/utils'
-import { company, IMAGES } from '@/lib/site'
+import { IMAGES } from '@/lib/site'
 
 type SiteHeaderProps = {
   locale?: Locale
@@ -60,7 +60,7 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
         {/* Logo */}
         <Link
           href={localizePath('/', locale)}
-          aria-label={`${company.brand} — ${dictionary.navigation.home}`}
+          aria-label={`${dictionary.content.shared.brandLockup} — ${dictionary.navigation.home}`}
           className={cn(
             'flex shrink-0 flex-col items-center',
             scrolled ? 'text-[#0d4077]' : 'text-white',

@@ -1,9 +1,10 @@
 'use client'
 
-import { animate, useInView, useReducedMotion } from 'motion/react'
+import { animate, useInView } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { formatCountValue, parseCountValue } from '@/lib/count-up'
+import { useHydratedReducedMotion } from '@/lib/use-hydrated-reduced-motion'
 
 type CountUpStatProps = {
   value: string
@@ -13,7 +14,7 @@ type CountUpStatProps = {
 export function CountUpStat({ value, suffix }: CountUpStatProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useHydratedReducedMotion()
   const target = parseCountValue(value)
   const [displayValue, setDisplayValue] = useState(0)
 
@@ -32,7 +33,8 @@ export function CountUpStat({ value, suffix }: CountUpStatProps) {
   const visibleValue = reduceMotion ? target : displayValue
 
   return (
-    <span ref={ref} aria-label={`${value}${suffix}`}>
+    <span ref={ref}>
+      <span className="sr-only">{value}{suffix}</span>
       <span aria-hidden="true">{formatCountValue(visibleValue)}{suffix}</span>
     </span>
   )

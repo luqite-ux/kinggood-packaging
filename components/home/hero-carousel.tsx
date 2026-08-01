@@ -2,11 +2,12 @@
 
 import Image from 'next/image'
 import { Pause, Play, ChevronLeft, ChevronRight } from 'lucide-react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState, type FocusEvent } from 'react'
 import type { Dictionary } from '@/lib/i18n/types'
 import { formatSlideLabel, HERO_SLIDES, nextSlide, previousSlide } from '@/lib/hero-carousel'
 import { getHeroCarouselBackgroundMotion, getHeroCarouselMotion } from '@/lib/hero-motion'
+import { useHydratedReducedMotion } from '@/lib/use-hydrated-reduced-motion'
 
 type HeroCarouselProps = {
   labels: Dictionary['carousel']
@@ -15,7 +16,7 @@ type HeroCarouselProps = {
 const AUTOPLAY_INTERVAL = 6_000
 
 export function HeroCarousel({ labels }: HeroCarouselProps) {
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useHydratedReducedMotion()
   const [activeIndex, setActiveIndex] = useState(0)
   const [isManuallyPaused, setIsManuallyPaused] = useState(false)
   const [isInteractionPaused, setIsInteractionPaused] = useState(false)
@@ -120,11 +121,16 @@ export function HeroCarousel({ labels }: HeroCarouselProps) {
               type="button"
               aria-label={formatSlideLabel(labels.goToSlide, index)}
               aria-current={index === activeIndex ? 'true' : undefined}
-              className={`h-2.5 rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8a020] ${
-                index === activeIndex ? 'w-6 bg-[#e8a020]' : 'w-2.5 bg-white/60 hover:bg-white'
-              }`}
+              className="group inline-flex size-6 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8a020]"
               onClick={() => selectSlide(index)}
-            />
+            >
+              <span
+                aria-hidden
+                className={`h-2.5 rounded-full transition-all ${
+                  index === activeIndex ? 'w-6 bg-[#e8a020]' : 'w-2.5 bg-white/60 group-hover:bg-white'
+                }`}
+              />
+            </button>
           ))}
         </div>
         <button

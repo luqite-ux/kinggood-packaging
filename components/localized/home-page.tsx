@@ -202,7 +202,7 @@ export function HomePageBody({
         </section>
 
         {/* ── 6. Custom packaging process ────────────────────────────── */}
-        <section className="bg-white py-20 lg:py-28" aria-labelledby="process-heading">
+        <section className="overflow-x-hidden bg-white py-20 lg:py-28" aria-labelledby="process-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-start">
               <Reveal x={-64} y={0}>

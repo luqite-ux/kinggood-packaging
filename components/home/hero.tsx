@@ -1,12 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { HeroCarousel } from '@/components/home/hero-carousel'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
+import { useHydratedReducedMotion } from '@/lib/use-hydrated-reduced-motion'
 
 const stagger = {
   hidden: {},
@@ -24,7 +25,7 @@ type HeroProps = {
 }
 
 export function Hero({ locale = 'en', dictionary = defaultDictionary }: HeroProps) {
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useHydratedReducedMotion()
   const metrics = [
     dictionary.hero.metrics.operating,
     dictionary.hero.metrics.facilityArea,
