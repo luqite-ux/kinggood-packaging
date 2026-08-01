@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
+import { localizePath, type Locale } from '@/lib/i18n/config'
+import defaultDictionary from '@/lib/i18n/dictionaries/en'
+import type { Dictionary } from '@/lib/i18n/types'
 
 type Crumb = { label: string; href?: string }
 
@@ -10,9 +13,29 @@ type PageHeroProps = {
   description?: string
   image: string
   crumbs?: Crumb[]
+  locale?: Locale
+  dictionary?: Dictionary
 }
 
-export function PageHero({ eyebrow, title, description, image, crumbs }: PageHeroProps) {
+export function PageHero({
+  eyebrow,
+  title,
+  description,
+  image,
+  crumbs,
+  locale = 'en',
+  dictionary = defaultDictionary,
+}: PageHeroProps) {
+  const crumbLabels: Record<string, string> = {
+    '/': dictionary.navigation.home,
+    '/products': dictionary.navigation.products,
+    '/custom-packaging': dictionary.navigation.customPackaging,
+    '/industries': dictionary.navigation.industries,
+    '/about': dictionary.navigation.about,
+    '/news': dictionary.navigation.news,
+    '/contact': dictionary.navigation.contact,
+  }
+
   return (
     <section className="relative flex min-h-[52vh] items-end overflow-hidden bg-[#071829] text-white lg:min-h-[60vh]">
       <Image src={image} alt="" fill priority className="object-cover" />
@@ -26,8 +49,13 @@ export function PageHero({ eyebrow, title, description, image, crumbs }: PageHer
             {crumbs.map((c, i) => (
               <span key={i} className="flex items-center gap-1.5">
                 {c.href ? (
-                  <Link href={c.href} className="transition-colors hover:text-white">
-                    {c.label}
+                  <Link
+                    href={c.href.startsWith('/') && !c.href.startsWith('/admin')
+                      ? localizePath(c.href, locale)
+                      : c.href}
+                    className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    {crumbLabels[c.href] || c.label}
                   </Link>
                 ) : (
                   <span className="text-white">{c.label}</span>

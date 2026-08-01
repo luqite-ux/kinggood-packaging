@@ -2,17 +2,66 @@
 
 import { useState } from 'react'
 import { CheckCircle2, Loader2, Send } from 'lucide-react'
-import { products } from '@/lib/site'
+import { products as defaultProducts, type Product } from '@/lib/site'
 import { getSupabaseClient } from '@/lib/supabase'
+import type { Locale } from '@/lib/i18n/config'
+import defaultDictionary from '@/lib/i18n/dictionaries/en'
+import type { Dictionary } from '@/lib/i18n/types'
 
-export function ContactForm() {
+type ContactFormProps = {
+  locale?: Locale
+  dictionary?: Dictionary
+  products?: Product[]
+}
+
+type FormField = 'name' | 'email' | 'message'
+type ValidationErrors = Partial<Record<FormField, string>>
+
+export function ContactForm({
+  locale = 'en',
+  dictionary = defaultDictionary,
+  products = defaultProducts,
+}: ContactFormProps) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setStatus('submitting')
-    const form = e.currentTarget
+  const requiredMessage = (field: string) =>
+    dictionary.forms.requiredField.replace('{field}', field)
+
+  const clearValidationError = (field: FormField) => {
+    setValidationErrors((current) => {
+      if (!current[field]) return current
+      const next = { ...current }
+      delete next[field]
+      return next
+    })
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const form = event.currentTarget
     const values = new FormData(form)
+    const name = String(values.get('name') || '').trim()
+    const email = String(values.get('email') || '').trim()
+    const message = String(values.get('message') || '').trim()
+    const errors: ValidationErrors = {}
+
+    if (!name) errors.name = requiredMessage(dictionary.forms.fullName)
+    if (!email) {
+      errors.email = requiredMessage(dictionary.forms.email)
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = dictionary.forms.invalidEmail
+    }
+    if (!message) errors.message = requiredMessage(dictionary.forms.message)
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      setStatus('idle')
+      return
+    }
+
+    setValidationErrors({})
+    setStatus('submitting')
     const supabase = getSupabaseClient()
     const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
     if (!supabase || !tenantId) return setStatus('error')
@@ -20,11 +69,11 @@ export function ContactForm() {
     const country = String(values.get('country') || '')
     const { error } = await supabase.from('inquiries').insert({
       tenant_id: tenantId,
-      name: String(values.get('name') || ''),
-      email: String(values.get('email') || ''),
+      name,
+      email,
       company: String(values.get('company') || ''),
       subject: product || 'Website enquiry',
-      message: [String(values.get('message') || ''), country && `Country / Region: ${country}`].filter(Boolean).join('\n\n'),
+      message: [message, country && `Country / Region: ${country}`].filter(Boolean).join('\n\n'),
     })
     if (error) return setStatus('error')
     form.reset()
@@ -33,23 +82,25 @@ export function ContactForm() {
 
   if (status === 'success') {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-10 text-center">
+      <div
+        lang={locale}
+        className="flex flex-col items-center justify-center rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-10 text-center"
+      >
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e8a020]/15 text-[#8a5600]">
-          <CheckCircle2 className="h-7 w-7" />
+          <CheckCircle2 className="h-7 w-7" aria-hidden />
         </span>
         <h3 className="mt-5 text-2xl font-bold text-[#0f1b2d]">
-          Thank you for your enquiry
+          {dictionary.forms.enquiryReceived}
         </h3>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#5a7085]">
-          Our export team has received your message and will get back to you within one
-          business day.
+          {dictionary.forms.enquiryReceivedDescription}
         </p>
         <button
           type="button"
           onClick={() => setStatus('idle')}
-          className="mt-6 text-sm font-semibold text-[#0d4077] hover:underline"
+          className="mt-6 rounded text-sm font-semibold text-[#0d4077] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0d4077]"
         >
-          Send another enquiry
+          {dictionary.actions.sendAnotherEnquiry}
         </button>
       </div>
     )
@@ -57,66 +108,95 @@ export function ContactForm() {
 
   return (
     <form
+      lang={locale}
       onSubmit={handleSubmit}
+      noValidate
+      aria-busy={status === 'submitting'}
       className="rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-6 sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Full name" htmlFor="name">
+        <Field
+          label={dictionary.forms.fullName}
+          htmlFor="name"
+          error={validationErrors.name}
+        >
           <input
             id="name"
             name="name"
             required
+            aria-invalid={Boolean(validationErrors.name)}
+            aria-describedby={validationErrors.name ? 'name-error' : undefined}
+            onInput={() => clearValidationError('name')}
             className="kg-input"
-            placeholder="Your name"
+            placeholder={dictionary.forms.fullNamePlaceholder}
           />
         </Field>
-        <Field label="Company" htmlFor="company">
+        <Field label={dictionary.forms.company} htmlFor="company">
           <input
             id="company"
             name="company"
             className="kg-input"
-            placeholder="Company name"
+            placeholder={dictionary.forms.companyPlaceholder}
           />
         </Field>
-        <Field label="Email" htmlFor="email">
+        <Field
+          label={dictionary.forms.email}
+          htmlFor="email"
+          error={validationErrors.email}
+        >
           <input
             id="email"
             name="email"
             type="email"
             required
+            aria-invalid={Boolean(validationErrors.email)}
+            aria-describedby={validationErrors.email ? 'email-error' : undefined}
+            onInput={() => clearValidationError('email')}
             className="kg-input"
-            placeholder="you@company.com"
+            placeholder={dictionary.forms.emailPlaceholder}
           />
         </Field>
-        <Field label="Country / Region" htmlFor="country">
+        <Field label={dictionary.forms.countryRegion} htmlFor="country">
           <input
             id="country"
             name="country"
             className="kg-input"
-            placeholder="e.g. Germany"
+            placeholder={dictionary.forms.countryRegionPlaceholder}
           />
         </Field>
-        <Field label="Product of interest" htmlFor="product" className="sm:col-span-2">
+        <Field
+          label={dictionary.forms.productInterest}
+          htmlFor="product"
+          className="sm:col-span-2"
+        >
           <select id="product" name="product" className="kg-input" defaultValue="">
             <option value="" disabled>
-              Select a product
+              {dictionary.forms.selectProduct}
             </option>
-            {products.map((p) => (
-              <option key={p.slug} value={p.name}>
-                {p.name}
+            {products.map((product) => (
+              <option key={product.slug} value={product.name}>
+                {product.name}
               </option>
             ))}
-            <option value="Other">Other / Not sure</option>
+            <option value="Other">{dictionary.forms.otherProduct}</option>
           </select>
         </Field>
-        <Field label="Message" htmlFor="message" className="sm:col-span-2">
+        <Field
+          label={dictionary.forms.message}
+          htmlFor="message"
+          className="sm:col-span-2"
+          error={validationErrors.message}
+        >
           <textarea
             id="message"
             name="message"
             required
             rows={5}
+            aria-invalid={Boolean(validationErrors.message)}
+            aria-describedby={validationErrors.message ? 'message-error' : undefined}
+            onInput={() => clearValidationError('message')}
             className="kg-input resize-none"
-            placeholder="Tell us about your cargo, dimensions, destination and expected volume."
+            placeholder={dictionary.forms.messagePlaceholder}
           />
         </Field>
       </div>
@@ -124,23 +204,23 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded bg-[#0d4077] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#0b3260] disabled:opacity-70 sm:w-auto"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded bg-[#0d4077] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#0b3260] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0d4077] disabled:opacity-70 sm:w-auto"
       >
         {status === 'submitting' ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Sending...
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            {dictionary.actions.sending}
           </>
         ) : (
           <>
-            <Send className="h-4 w-4" />
-            Send enquiry
+            <Send className="h-4 w-4" aria-hidden />
+            {dictionary.actions.sendEnquiry}
           </>
         )}
       </button>
       {status === 'error' && (
         <p role="alert" className="mt-4 text-sm font-medium text-red-700">
-          We could not send your enquiry. Please try again or email kinggood66@163.com.
+          {dictionary.forms.enquiryFailed}
         </p>
       )}
 
@@ -160,6 +240,9 @@ export function ContactForm() {
           border-color: #0d4077;
           box-shadow: 0 0 0 3px rgba(13, 64, 119, 0.12);
         }
+        :global(.kg-input[aria-invalid='true']) {
+          border-color: #b91c1c;
+        }
         :global(.kg-input::placeholder) {
           color: #5a7085;
         }
@@ -173,11 +256,13 @@ function Field({
   htmlFor,
   children,
   className = '',
+  error,
 }: {
   label: string
   htmlFor: string
   children: React.ReactNode
   className?: string
+  error?: string
 }) {
   return (
     <div className={className}>
@@ -188,6 +273,11 @@ function Field({
         {label}
       </label>
       {children}
+      {error && (
+        <p id={`${htmlFor}-error`} role="alert" className="mt-1.5 text-sm font-medium text-red-700">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

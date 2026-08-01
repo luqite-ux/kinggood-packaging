@@ -66,6 +66,8 @@ export type Dictionary = {
     otherProduct: string
     message: string
     messagePlaceholder: string
+    requiredField: string
+    invalidEmail: string
     enquiryReceived: string
     enquiryReceivedDescription: string
     enquiryFailed: string
@@ -83,6 +85,7 @@ export type Dictionary = {
     notFoundDescription: string
     unavailableTitle: string
     unavailableDescription: string
+    englishFallbackNotice: string
   }
   carousel: {
     previousSlide: string

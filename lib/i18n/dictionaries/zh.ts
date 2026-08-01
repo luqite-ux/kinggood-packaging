@@ -30,6 +30,7 @@ const zh = {
     email: '电子邮箱', emailPlaceholder: 'you@company.com', countryRegion: '国家 / 地区', countryRegionPlaceholder: '例如：德国',
     productInterest: '感兴趣的产品', selectProduct: '请选择产品', otherProduct: '其他 / 暂不确定',
     message: '留言', messagePlaceholder: '请告诉我们您的货物、尺寸、目的地和预计采购量。',
+    requiredField: '请填写{field}。', invalidEmail: '请输入有效的电子邮箱地址。',
     enquiryReceived: '感谢您的询盘', enquiryReceivedDescription: '我们的出口团队已收到您的信息，将在一个工作日内回复。',
     enquiryFailed: '询盘发送失败，请重试或发送邮件至 kinggood66@163.com。',
   },
@@ -44,6 +45,7 @@ const zh = {
   errors: {
     notFoundTitle: '未找到页面', notFoundDescription: '您请求的页面不可用或可能已移动。',
     unavailableTitle: '内容暂不可用', unavailableDescription: '请稍后重试，或联系我们的团队获取帮助。',
+    englishFallbackNotice: '本文目前仅提供英文版本。',
   },
   carousel: {
     previousSlide: '上一张', nextSlide: '下一张', pause: '暂停轮播', play: '播放轮播', slideLabel: '图片',

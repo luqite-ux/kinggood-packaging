@@ -1,10 +1,27 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, Mail, MapPin } from 'lucide-react'
-import { nav, company, productsWithShortName as products, IMAGES } from '@/lib/site'
+import { localizePath, type Locale } from '@/lib/i18n/config'
+import defaultDictionary from '@/lib/i18n/dictionaries/en'
+import type { Dictionary } from '@/lib/i18n/types'
+import { company, productsWithShortName as products, IMAGES } from '@/lib/site'
 
-export function SiteFooter() {
+type SiteFooterProps = {
+  locale?: Locale
+  dictionary?: Dictionary
+}
+
+export function SiteFooter({ locale = 'en', dictionary = defaultDictionary }: SiteFooterProps) {
   const year = new Date().getFullYear()
+  const localizedNav = [
+    { label: dictionary.navigation.home, href: '/' },
+    { label: dictionary.navigation.products, href: '/products' },
+    { label: dictionary.navigation.customPackaging, href: '/custom-packaging' },
+    { label: dictionary.navigation.industries, href: '/industries' },
+    { label: dictionary.navigation.about, href: '/about' },
+    { label: dictionary.navigation.news, href: '/news' },
+    { label: dictionary.navigation.contact, href: '/contact' },
+  ]
 
   return (
     <footer className="bg-[#071829] text-[#f0f4f8]">
@@ -26,12 +43,11 @@ export function SiteFooter() {
                 KINGGOOD PACKAGING
               </span>
             </div>
-            <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#f0f4f8]/60">
-              {company.legalName} — manufacturers of wooden pallets, heavy-duty wood crates and
-              cable reels for global logistics. Founded {company.founded}.
+            <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#f0f4f8]/70">
+              {dictionary.footer.description}
             </p>
             {/* Contact quick links */}
-            <ul className="mt-6 space-y-3 text-sm text-[#f0f4f8]/60">
+            <ul className="mt-6 space-y-3 text-sm text-[#f0f4f8]/70">
               <li className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0 text-[#e8a020]" aria-hidden />
                 <a
@@ -60,14 +76,14 @@ export function SiteFooter() {
           {/* Navigation */}
           <div>
             <h3 className="eyebrow text-xs font-bold uppercase tracking-widest text-[#e8a020]">
-              Navigation
+              {dictionary.footer.navigation}
             </h3>
             <ul className="mt-5 space-y-3">
-              {nav.map((item) => (
+              {localizedNav.map((item) => (
                 <li key={item.href}>
                   <Link
-                    href={item.href}
-                    className="text-sm text-[#f0f4f8]/60 transition-colors hover:text-white focus-visible:text-white"
+                    href={localizePath(item.href, locale)}
+                    className="text-sm text-[#f0f4f8]/70 transition-colors hover:text-white focus-visible:text-white"
                   >
                     {item.label}
                   </Link>
@@ -79,14 +95,14 @@ export function SiteFooter() {
           {/* Products */}
           <div>
             <h3 className="eyebrow text-xs font-bold uppercase tracking-widest text-[#e8a020]">
-              Products
+              {dictionary.footer.products}
             </h3>
             <ul className="mt-5 space-y-3">
               {products.map((p) => (
                 <li key={p.slug}>
                   <Link
-                    href={`/products/${p.slug}`}
-                    className="text-sm text-[#f0f4f8]/60 transition-colors hover:text-white focus-visible:text-white"
+                    href={localizePath(`/products/${p.slug}`, locale)}
+                    className="text-sm text-[#f0f4f8]/70 transition-colors hover:text-white focus-visible:text-white"
                   >
                     {p.shortName}
                   </Link>
@@ -98,20 +114,20 @@ export function SiteFooter() {
           {/* Services / quick links */}
           <div>
             <h3 className="eyebrow text-xs font-bold uppercase tracking-widest text-[#e8a020]">
-              Services
+              {dictionary.footer.services}
             </h3>
             <ul className="mt-5 space-y-3">
               {[
-                { label: 'Custom Packaging', href: '/custom-packaging' },
-                { label: 'Industries Served', href: '/industries' },
-                { label: 'Request a Quote', href: '/contact' },
-                { label: 'News', href: '/news' },
-                { label: 'About Us', href: '/about' },
+                { label: dictionary.footer.customPackaging, href: '/custom-packaging' },
+                { label: dictionary.footer.industriesServed, href: '/industries' },
+                { label: dictionary.navigation.requestQuote, href: '/contact' },
+                { label: dictionary.navigation.news, href: '/news' },
+                { label: dictionary.navigation.about, href: '/about' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
-                    href={item.href}
-                    className="text-sm text-[#f0f4f8]/60 transition-colors hover:text-white focus-visible:text-white"
+                    href={localizePath(item.href, locale)}
+                    className="text-sm text-[#f0f4f8]/70 transition-colors hover:text-white focus-visible:text-white"
                   >
                     {item.label}
                   </Link>
@@ -125,8 +141,8 @@ export function SiteFooter() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-[#f0f4f8]/70 sm:flex-row sm:px-6 lg:px-8">
-          <p>&copy; {year} {company.legalName}. All rights reserved.</p>
-          <p>Nantong, Jiangsu, China</p>
+          <p>&copy; {year} {company.legalName}. {dictionary.footer.allRightsReserved}</p>
+          <p>{dictionary.footer.location}</p>
         </div>
       </div>
     </footer>

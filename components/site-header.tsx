@@ -5,10 +5,19 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { localizePath, type Locale } from '@/lib/i18n/config'
+import defaultDictionary from '@/lib/i18n/dictionaries/en'
+import type { Dictionary } from '@/lib/i18n/types'
 import { cn } from '@/lib/utils'
-import { nav, company, IMAGES } from '@/lib/site'
+import { company, IMAGES } from '@/lib/site'
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  locale?: Locale
+  dictionary?: Dictionary
+}
+
+export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: SiteHeaderProps) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -22,8 +31,22 @@ export function SiteHeader() {
 
   useEffect(() => { setOpen(false) }, [pathname])
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href)
+  const localizedNav = [
+    { label: dictionary.navigation.home, href: '/' },
+    { label: dictionary.navigation.products, href: '/products' },
+    { label: dictionary.navigation.customPackaging, href: '/custom-packaging' },
+    { label: dictionary.navigation.industries, href: '/industries' },
+    { label: dictionary.navigation.about, href: '/about' },
+    { label: dictionary.navigation.news, href: '/news' },
+    { label: dictionary.navigation.contact, href: '/contact' },
+  ]
+
+  const isActive = (href: string) => {
+    const localizedHref = localizePath(href, locale)
+    return localizedHref === '/' || localizedHref === `/${locale}`
+      ? pathname === localizedHref
+      : pathname.startsWith(localizedHref)
+  }
 
   return (
     <header
@@ -38,8 +61,8 @@ export function SiteHeader() {
 
         {/* Logo */}
         <Link
-          href="/"
-          aria-label={`${company.brand} — Home`}
+          href={localizePath('/', locale)}
+          aria-label={`${company.brand} — ${dictionary.navigation.home}`}
           className={cn(
             'flex shrink-0 flex-col items-center',
             scrolled ? 'text-[#0d4077]' : 'text-white',
@@ -59,11 +82,11 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <nav aria-label="Main navigation" className="hidden items-center gap-0.5 lg:flex">
-          {nav.slice(0, -1).map((item) => (
+        <nav aria-label={dictionary.navigation.mainNavigation} className="hidden items-center gap-0.5 xl:flex">
+          {localizedNav.slice(0, -1).map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={localizePath(item.href, locale)}
               className={cn(
                 'relative rounded px-3.5 py-2 text-sm font-medium transition-colors',
                 scrolled
@@ -86,7 +109,7 @@ export function SiteHeader() {
           ))}
           {/* Contact nav link */}
           <Link
-            href="/contact"
+            href={localizePath('/contact', locale)}
             className={cn(
               'relative rounded px-3.5 py-2 text-sm font-medium transition-colors',
               scrolled
@@ -98,7 +121,7 @@ export function SiteHeader() {
                   : 'text-white/75 hover:text-white',
             )}
           >
-            Contact
+            {dictionary.navigation.contact}
             {isActive('/contact') && (
               <span aria-hidden className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-[#e8a020]" />
             )}
@@ -107,25 +130,33 @@ export function SiteHeader() {
 
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-3">
-          <Link
-            href="/contact"
+          <LanguageSwitcher
+            locale={locale}
+            currentPath={pathname}
             className={cn(
-              'hidden rounded text-sm font-semibold transition-all lg:inline-flex lg:items-center lg:px-5 lg:py-2.5',
+              'hidden xl:block',
+              scrolled ? 'text-[#0d4077]' : 'text-white',
+            )}
+          />
+          <Link
+            href={localizePath('/contact', locale)}
+            className={cn(
+              'hidden rounded text-sm font-semibold transition-all xl:inline-flex xl:items-center xl:px-5 xl:py-2.5',
               scrolled
                 ? 'bg-[#0d4077] text-white hover:bg-[#0b3260]'
                 : 'bg-[#e8a020] text-[#3a2200] hover:bg-[#d89018]',
             )}
           >
-            Request a Quote
+            {dictionary.navigation.requestQuote}
           </Link>
 
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-label={open ? dictionary.navigation.closeMenu : dictionary.navigation.openMenu}
             aria-expanded={open}
             className={cn(
-              'inline-flex h-10 w-10 items-center justify-center rounded lg:hidden',
+              'inline-flex h-10 w-10 items-center justify-center rounded xl:hidden',
               scrolled ? 'text-[#0f1b2d]' : 'text-white',
             )}
           >
@@ -136,15 +167,15 @@ export function SiteHeader() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-[#d8e1eb] bg-white lg:hidden">
+        <div className="border-t border-[#d8e1eb] bg-white xl:hidden">
           <nav
-            aria-label="Mobile navigation"
+            aria-label={dictionary.navigation.mobileNavigation}
             className="mx-auto flex max-w-7xl flex-col gap-0.5 px-4 py-4 sm:px-6"
           >
-            {nav.map((item) => (
+            {localizedNav.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={localizePath(item.href, locale)}
                 className={cn(
                   'rounded px-3 py-3 text-[15px] font-medium',
                   isActive(item.href)
@@ -155,11 +186,16 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <LanguageSwitcher
+              locale={locale}
+              currentPath={pathname}
+              className="mt-3 border-t border-[#d8e1eb] pt-4 text-[#0d4077]"
+            />
             <Link
-              href="/contact"
+              href={localizePath('/contact', locale)}
               className="mt-3 inline-flex items-center justify-center rounded bg-[#0d4077] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0b3260]"
             >
-              Request a Quote
+              {dictionary.navigation.requestQuote}
             </Link>
           </nav>
         </div>

@@ -30,6 +30,7 @@ const de = {
     email: 'E-Mail', emailPlaceholder: 'you@company.com', countryRegion: 'Land / Region', countryRegionPlaceholder: 'z. B. Deutschland',
     productInterest: 'Gewünschtes Produkt', selectProduct: 'Produkt auswählen', otherProduct: 'Sonstiges / Noch nicht sicher',
     message: 'Nachricht', messagePlaceholder: 'Beschreiben Sie Ihre Fracht, Maße, den Bestimmungsort und die erwartete Menge.',
+    requiredField: '{field} ist erforderlich.', invalidEmail: 'Geben Sie eine gültige E-Mail-Adresse ein.',
     enquiryReceived: 'Vielen Dank für Ihre Anfrage', enquiryReceivedDescription: 'Unser Exportteam hat Ihre Nachricht erhalten und meldet sich innerhalb eines Werktags bei Ihnen.',
     enquiryFailed: 'Ihre Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie an kinggood66@163.com.',
   },
@@ -44,6 +45,7 @@ const de = {
   errors: {
     notFoundTitle: 'Seite nicht gefunden', notFoundDescription: 'Die angeforderte Seite ist nicht verfügbar oder wurde möglicherweise verschoben.',
     unavailableTitle: 'Inhalt nicht verfügbar', unavailableDescription: 'Bitte versuchen Sie es in Kürze erneut oder kontaktieren Sie unser Team.',
+    englishFallbackNotice: 'Dieser Artikel ist derzeit nur auf Englisch verfügbar.',
   },
   carousel: {
     previousSlide: 'Vorheriges Bild', nextSlide: 'Nächstes Bild', pause: 'Karussell anhalten', play: 'Karussell starten', slideLabel: 'Folie',

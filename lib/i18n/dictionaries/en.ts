@@ -34,6 +34,7 @@ const en = {
     email: 'Email', emailPlaceholder: 'you@company.com', countryRegion: 'Country / Region', countryRegionPlaceholder: 'e.g. Germany',
     productInterest: 'Product of interest', selectProduct: 'Select a product', otherProduct: 'Other / Not sure',
     message: 'Message', messagePlaceholder: 'Tell us about your cargo, dimensions, destination and expected volume.',
+    requiredField: '{field} is required.', invalidEmail: 'Enter a valid email address.',
     enquiryReceived: 'Thank you for your enquiry', enquiryReceivedDescription: 'Our export team has received your message and will get back to you within one business day.',
     enquiryFailed: 'We could not send your enquiry. Please try again or email kinggood66@163.com.',
   },
@@ -48,6 +49,7 @@ const en = {
   errors: {
     notFoundTitle: 'Page not found', notFoundDescription: 'The page you requested is unavailable or may have moved.',
     unavailableTitle: 'Content unavailable', unavailableDescription: 'Please try again shortly or contact our team for assistance.',
+    englishFallbackNotice: 'This article is currently available in English.',
   },
   carousel: {
     previousSlide: 'Previous slide', nextSlide: 'Next slide', pause: 'Pause carousel', play: 'Play carousel', slideLabel: 'Slide',

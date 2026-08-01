@@ -24,3 +24,36 @@ export function getAlternateLanguages(path: string): Record<string, string> {
   links['x-default'] = links.en
   return links
 }
+
+export type LanguageSwitcherLink = {
+  locale: Locale
+  href: string
+  isCurrent: boolean
+}
+
+function normalizeCurrentPath(currentPath: string): string {
+  const pathWithoutQuery = currentPath.split(/[?#]/, 1)[0] || '/'
+  const normalized = `/${pathWithoutQuery.replace(/^\/+/, '')}`
+  const segments = normalized.split('/')
+
+  if (segments[1] && isLocale(segments[1])) segments.splice(1, 1)
+
+  return segments.join('/') || '/'
+}
+
+export function buildLanguageSwitcherLinks(
+  currentLocale: Locale,
+  currentPath: string,
+): LanguageSwitcherLink[] {
+  if (!isLocale(currentLocale)) {
+    throw new Error(`Unsupported locale: ${String(currentLocale)}`)
+  }
+
+  const normalizedPath = normalizeCurrentPath(currentPath)
+
+  return locales.map((locale) => ({
+    locale,
+    href: localizePath(normalizedPath, locale),
+    isCurrent: locale === currentLocale,
+  }))
+}
