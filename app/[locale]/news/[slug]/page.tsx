@@ -19,10 +19,8 @@ export default async function LocalizedNewsArticlePage({
   const sourceArticle = await getArticleBySlug(slug)
   if (!sourceArticle) notFound()
 
-  const [dictionary, localized] = await Promise.all([
-    getDictionary(locale),
-    Promise.resolve(getLocalizedArticle(sourceArticle, locale)),
-  ])
+  const dictionary = await getDictionary(locale)
+  const localized = getLocalizedArticle(sourceArticle, locale)
   return (
     <NewsArticlePageBody
       locale={locale}

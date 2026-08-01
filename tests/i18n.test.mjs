@@ -286,3 +286,76 @@ test('does not record an English database fallback as localized article content'
   assert.equal(article.translations?.zh?.content, undefined)
   assert.equal(getLocalizedArticle(article, 'zh').isFallback, true)
 })
+
+test('maps shared article JSONB fields into real German and Spanish content', () => {
+  const row = {
+    slug: 'export-packaging-guide',
+    title: '旧中文标题',
+    title_en: 'Legacy English title',
+    title_i18n: {
+      en: 'JSON English title',
+      zh: 'JSON 中文标题',
+      de: 'Deutscher JSON-Titel',
+      es: 'Título JSON en español',
+    },
+    excerpt: '旧中文摘要',
+    excerpt_en: 'Legacy English excerpt.',
+    excerpt_i18n: {
+      en: 'JSON English excerpt.',
+      de: 'Deutsche JSON-Zusammenfassung.',
+      es: 'Resumen JSON en español.',
+    },
+    content: '<p>旧中文正文。</p>',
+    content_en: '<p>Legacy English content.</p>',
+    content_i18n: {
+      en: '<p>JSON English content.</p>',
+      de: '<p>Deutscher JSON-Inhalt.</p>',
+      es: '<p>Contenido JSON en español.</p>',
+    },
+    featured_image: 'https://example.com/article.jpg',
+    published_at: '2026-08-01T00:00:00.000Z',
+  }
+
+  const article = mapArticleRow(row)
+  assert.equal(article.title, 'JSON English title')
+  assert.equal(article.content, '<p>JSON English content.</p>')
+
+  const german = getLocalizedArticle(article, 'de')
+  assert.equal(german.article.title, 'Deutscher JSON-Titel')
+  assert.equal(german.article.excerpt, 'Deutsche JSON-Zusammenfassung.')
+  assert.equal(german.article.content, '<p>Deutscher JSON-Inhalt.</p>')
+  assert.equal(german.isFallback, false)
+
+  const spanish = getLocalizedArticle(article, 'es')
+  assert.equal(spanish.article.title, 'Título JSON en español')
+  assert.equal(spanish.article.excerpt, 'Resumen JSON en español.')
+  assert.equal(spanish.article.content, '<p>Contenido JSON en español.</p>')
+  assert.equal(spanish.isFallback, false)
+})
+
+test('ignores malformed article JSONB values and safely uses legacy English fallback', () => {
+  const article = mapArticleRow({
+    slug: 'export-packaging-guide',
+    title: '旧中文标题',
+    title_en: 'Legacy English title',
+    title_i18n: { en: 17, zh: null, de: ['bad'], es: { bad: true } },
+    excerpt: '旧中文摘要',
+    excerpt_en: 'Legacy English excerpt.',
+    excerpt_i18n: 'not-an-object',
+    content: '<p>旧中文正文。</p>',
+    content_en: '<p>Legacy English content.</p>',
+    content_i18n: { de: '   ', es: false },
+    featured_image: null,
+    published_at: null,
+  })
+
+  assert.equal(article.title, 'Legacy English title')
+  assert.equal(article.excerpt, 'Legacy English excerpt.')
+  assert.equal(article.content, '<p>Legacy English content.</p>')
+  for (const locale of ['de', 'es']) {
+    const localized = getLocalizedArticle(article, locale)
+    assert.equal(localized.article.title, 'Legacy English title')
+    assert.equal(localized.article.content, '<p>Legacy English content.</p>')
+    assert.equal(localized.isFallback, true)
+  }
+})
