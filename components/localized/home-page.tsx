@@ -23,6 +23,7 @@ import {
 } from '@/lib/site'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/types'
+import { buildHomeProductCategories } from '@/lib/home-product-categories'
 
 type HomePageBodyProps = {
   locale: Locale
@@ -54,16 +55,7 @@ export function HomePageBody({
   products = defaultProducts,
 }: HomePageBodyProps) {
   const { home, shared } = dictionary.content
-  const categoryImages = {
-    pallets: '/product-iso-pallet.png',
-    crates: '/product-solid-crate.png',
-    'cable-reels': '/product-cable-reel.jpg',
-  }
-  const productCategories = shared.categories.map((category) => ({
-    ...category,
-    image: categoryImages[category.key],
-    products: products.filter((product) => product.category === category.key),
-  }))
+  const productCategories = buildHomeProductCategories(shared.categories, products)
 
   return (
     <>

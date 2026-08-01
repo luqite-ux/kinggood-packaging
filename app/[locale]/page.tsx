@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { HomePageBody } from '@/components/localized/home-page'
+import { loadHomePageData } from '@/lib/home-page-data'
 import { isLocale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/get-dictionary'
-import { fetchProductsData } from '@/lib/products-db'
 import { localizedMetadata } from '@/lib/seo'
 
 export const revalidate = 60
@@ -34,9 +34,6 @@ export default async function LocalizedHomePage({
   if (!isLocale(locale)) notFound()
   if (locale === 'en') permanentRedirect('/')
 
-  const [dictionary, products] = await Promise.all([
-    getDictionary(locale),
-    fetchProductsData(locale),
-  ])
+  const { dictionary, products } = await loadHomePageData(locale)
   return <HomePageBody locale={locale} dictionary={dictionary} products={products} />
 }
