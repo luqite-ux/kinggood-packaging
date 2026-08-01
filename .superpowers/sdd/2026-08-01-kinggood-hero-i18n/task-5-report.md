@@ -126,3 +126,82 @@ An independent read-only reviewer initially found two Important issues: root `he
 - Product/article detail routes remain on-demand dynamic routes in the Next build, matching the inherited route behavior; Task 5 did not change their data-loading model.
 - `pnpm build` continues to emit two non-fatal repository/tooling warnings: multiple workspace lockfiles affect inferred root selection, and Next 16 marks the existing project-standard `middleware.ts` convention as deprecated in favor of `proxy.ts`.
 - No deployment, external data mutation, merge, or push was performed.
+
+## Fix round 1/5 — product sitemap timestamps
+
+Date: 2026-08-01
+
+Fix commit: `ac708a3aebff5cc7ada41ad629f01f32b4dd8f44` (`fix: map product sitemap timestamps`)
+
+### Finding and correction
+
+`fetchActiveProductsForSitemap()` selected Supabase rows with `updated_at` but asserted those rows were already `SitemapProduct` objects with `updatedAt`. The cast hid the missing snake_case-to-camelCase boundary, so product sitemap entries received `undefined` and omitted real modification times.
+
+The fix introduces an explicit `SitemapProductRow` with `updated_at`, maps each strict active-product row through `mapSitemapProductRow()`, preserves valid database timestamp strings, and converts null or invalid values to `undefined`. The strict successful-empty/error behavior still returns `[]`; the frontend product fallback path is unchanged. Internal imports in `products-db.ts` and its Supabase helper use equivalent relative paths so the Node regression test exercises the real mapper.
+
+### RED/GREEN evidence
+
+Initial focused command:
+
+```powershell
+node --test tests/product-sitemap.test.mjs tests/seo-locales.test.mjs tests/seo.test.mjs
+```
+
+First RED result: exit `1`; Node could not resolve the Next-only `@/` alias while importing the real module. After switching only the relevant internal imports to equivalent relative paths, the same command failed for the intended reason: `mapSitemapProductRow` was missing.
+
+GREEN result after the mapper fix: exit `0`; 17 passed, 0 failed. The new tests verify:
+
+- valid `updated_at` maps to `updatedAt`;
+- null and invalid timestamps map to `undefined`;
+- the mapped timestamp reaches all four localized sitemap entries;
+- the existing strict empty active-product behavior remains green.
+
+### Final verification
+
+```powershell
+node --test tests/product-sitemap.test.mjs tests/seo-locales.test.mjs tests/seo.test.mjs
+```
+
+Exit `0`: 17 passed, 0 failed.
+
+```powershell
+pnpm test
+```
+
+Exit `0`: 57 passed, 0 failed.
+
+```powershell
+pnpm exec tsc --noEmit
+```
+
+Exit `0`, no diagnostics.
+
+```powershell
+pnpm lint
+```
+
+Exit `0`, no ESLint findings.
+
+```powershell
+pnpm build
+```
+
+Exit `0`: compiled successfully and generated all 34 static-generation targets.
+
+```powershell
+rg -ni --hidden -g '!*.map' -g '!node_modules/**' -g '!.next/**' "warranty|warranties|guarantee|guaranteed|质保|保修|Garantie|Gewähr|garantía" app components lib public
+```
+
+Exit `1` as expected for no matches; normalized result: `NO_PROHIBITED_SOURCE_MATCHES`.
+
+```powershell
+git diff --check
+```
+
+Exit `0`; no whitespace errors. Only the repository's existing LF-to-CRLF checkout notices were emitted.
+
+### Fix-round concerns
+
+- Production Supabase credentials were not available locally, so the live database row was not queried; the regression test covers the exact row mapper and downstream sitemap entry behavior with representative Supabase-shaped data.
+- The requested middleware deprecation and nested-worktree/workspace-root warnings were intentionally deferred and were not changed in this fix.
+- No deployment, merge, external mutation, or push was performed.
