@@ -96,6 +96,17 @@ export function serializeLocaleCookie(locale: Locale): string {
   return `kinggood_locale=${locale}; Max-Age=${oneYearInSeconds}; Path=/; SameSite=Lax`
 }
 
+const safePathSegment = /^[a-z0-9][a-z0-9._~-]*$/i
+
+export function buildUnprefixedEnglishPath(path: string[] | undefined): string {
+  const safeSegments = (path || []).filter(
+    (segment) => segment !== '.' && segment !== '..' && safePathSegment.test(segment),
+  )
+  return safeSegments.length > 0
+    ? `/${safeSegments.map((segment) => encodeURIComponent(segment)).join('/')}`
+    : '/'
+}
+
 export function localizeNavigationHref(href: string, locale: Locale): string {
   const isSingleSlashPath = href.startsWith('/') && !href.startsWith('//')
   const isAdminPath = href === '/admin' || href.startsWith('/admin/')

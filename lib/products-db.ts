@@ -1,5 +1,7 @@
 import { products as fallbackProducts, type Product } from '@/lib/site'
 import { getSupabaseClient } from '@/lib/supabase'
+import { defaultLocale, type Locale } from '@/lib/i18n/config'
+import { localizeProduct } from '@/lib/i18n/products'
 
 type ProductRow = {
   slug: string
@@ -37,16 +39,21 @@ function mapProduct(row: ProductRow): Product {
   }
 }
 
-export async function fetchProductsData(): Promise<Product[]> {
+export async function fetchProductsData(locale: Locale = defaultLocale): Promise<Product[]> {
   const supabase = getSupabaseClient()
   const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
-  if (!supabase || !tenantId) return fallbackProducts
+  if (!supabase || !tenantId) {
+    return fallbackProducts.map((product) => localizeProduct(product, locale))
+  }
   const { data, error } = await supabase.from('products')
     .select('slug,name,description,overview,image_url,category_slug,features,applications,specs,extra_data')
     .eq('tenant_id', tenantId).eq('is_active', true).order('sort_order')
-  return error || !data?.length ? fallbackProducts : (data as ProductRow[]).map(mapProduct)
+  const products = error || !data?.length
+    ? fallbackProducts
+    : (data as ProductRow[]).map(mapProduct)
+  return products.map((product) => localizeProduct(product, locale))
 }
 
-export async function getProductBySlug(slug: string) {
-  return (await fetchProductsData()).find((product) => product.slug === slug) || null
+export async function getProductBySlug(slug: string, locale: Locale = defaultLocale) {
+  return (await fetchProductsData(locale)).find((product) => product.slug === slug) || null
 }

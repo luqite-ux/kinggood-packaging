@@ -6,6 +6,9 @@ import zh from '../lib/i18n/dictionaries/zh.ts'
 import de from '../lib/i18n/dictionaries/de.ts'
 import es from '../lib/i18n/dictionaries/es.ts'
 import * as i18nConfig from '../lib/i18n/config.ts'
+import { localizeProduct } from '../lib/i18n/products.ts'
+import { products } from '../lib/site.ts'
+import { getLocalizedArticle, mapArticleRow } from '../lib/articles-db.ts'
 
 test('validates only supported locales', () => {
   assert.equal(isLocale('de'), true)
@@ -146,6 +149,19 @@ test('serializes the locale preference cookie with the required scope and lifeti
   }
 })
 
+test('maps duplicate English route segments to a safe unprefixed path', () => {
+  assert.equal(typeof i18nConfig.buildUnprefixedEnglishPath, 'function')
+  assert.equal(i18nConfig.buildUnprefixedEnglishPath(undefined), '/')
+  assert.equal(
+    i18nConfig.buildUnprefixedEnglishPath(['products', 'solid-wood-crate']),
+    '/products/solid-wood-crate',
+  )
+  assert.equal(
+    i18nConfig.buildUnprefixedEnglishPath(['products', '..', 'unsafe/path', 'solid-wood-crate']),
+    '/products/solid-wood-crate',
+  )
+})
+
 test('provides typed localized static page content and language controls', () => {
   for (const dictionary of [en, zh, de, es]) {
     assert.equal(typeof dictionary.navigation.languageSelection, 'string')
@@ -176,4 +192,97 @@ test('localized dictionaries contain no prohibited service promises', () => {
   for (const dictionary of [en, zh, de, es]) {
     assert.doesNotMatch(JSON.stringify(dictionary), prohibited)
   }
+})
+
+test('uses translated product presentation while preserving the stable slug', () => {
+  const product = products[0]
+  const result = localizeProduct(product, 'de')
+
+  assert.equal(result.slug, product.slug)
+  assert.notEqual(result.name, '')
+  assert.notEqual(result.name, product.name)
+})
+
+test('falls back to English for a product field without a localized overlay', () => {
+  const product = products[0]
+
+  assert.equal(localizeProduct(product, 'es').dimensions, product.dimensions)
+})
+
+test('localizes product presentation without mutating stable data or specification values', () => {
+  const product = products[0]
+  const snapshot = structuredClone(product)
+  const result = localizeProduct(product, 'zh')
+
+  assert.deepEqual(product, snapshot)
+  assert.notStrictEqual(result, product)
+  assert.deepEqual(
+    result.specs.map(({ value }) => value),
+    product.specs.map(({ value }) => value),
+  )
+  assert.notEqual(result.specs[0].label, product.specs[0].label)
+})
+
+test('marks German and Spanish article content as an English fallback', () => {
+  const article = {
+    slug: 'export-packaging-guide',
+    title: 'Export packaging guide',
+    excerpt: 'English article summary.',
+    content: '<p>English article content.</p>',
+    coverImage: null,
+    publishedAt: '2026-08-01T00:00:00.000Z',
+  }
+
+  for (const locale of ['de', 'es']) {
+    const result = getLocalizedArticle(article, locale)
+    assert.equal(result.article.title, article.title)
+    assert.equal(result.article.content, article.content)
+    assert.equal(result.isFallback, true)
+  }
+})
+
+test('uses available localized article fields and falls back field by field', () => {
+  const article = {
+    slug: 'export-packaging-guide',
+    title: 'Export packaging guide',
+    excerpt: 'English article summary.',
+    content: '<p>English article content.</p>',
+    coverImage: null,
+    publishedAt: null,
+    translations: {
+      zh: {
+        title: '出口包装指南',
+        excerpt: '',
+        content: '<p>中文文章正文。</p>',
+      },
+    },
+  }
+
+  const result = getLocalizedArticle(article, 'zh')
+  assert.equal(result.article.title, '出口包装指南')
+  assert.equal(result.article.excerpt, article.excerpt)
+  assert.equal(result.article.content, '<p>中文文章正文。</p>')
+  assert.equal(result.isFallback, false)
+  assert.deepEqual(article.translations.zh, {
+    title: '出口包装指南',
+    excerpt: '',
+    content: '<p>中文文章正文。</p>',
+  })
+})
+
+test('does not record an English database fallback as localized article content', () => {
+  const article = mapArticleRow({
+    slug: 'export-packaging-guide',
+    title: '',
+    title_en: 'Export packaging guide',
+    excerpt: null,
+    excerpt_en: 'English article summary.',
+    content: '',
+    content_en: '<p>English article content.</p>',
+    featured_image: null,
+    published_at: null,
+  })
+
+  assert.equal(article.translations?.zh?.content, undefined)
+  assert.equal(getLocalizedArticle(article, 'zh').isFallback, true)
 })
