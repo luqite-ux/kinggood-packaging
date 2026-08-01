@@ -1,8 +1,8 @@
-import { products as fallbackProducts, type Product } from '@/lib/site'
-import { getSupabaseClient } from '@/lib/supabase'
-import { defaultLocale, type Locale } from '@/lib/i18n/config'
-import { localizeProduct } from '@/lib/i18n/products'
-import { strictSitemapRecords } from '@/lib/seo'
+import { products as fallbackProducts, type Product } from './site.ts'
+import { getSupabaseClient } from './supabase.ts'
+import { defaultLocale, type Locale } from './i18n/config.ts'
+import { localizeProduct } from './i18n/products.ts'
+import { strictSitemapRecords } from './seo.ts'
 
 type ProductRow = {
   slug: string
@@ -58,6 +58,21 @@ export async function fetchProductsData(locale: Locale = defaultLocale): Promise
 }
 
 type SitemapProduct = Pick<Product, 'slug' | 'updatedAt'>
+type SitemapProductRow = {
+  slug: string
+  updated_at: string | null
+}
+
+function validUpdatedAt(value: string | null): string | undefined {
+  return value && !Number.isNaN(Date.parse(value)) ? value : undefined
+}
+
+export function mapSitemapProductRow(row: SitemapProductRow): SitemapProduct {
+  return {
+    slug: row.slug,
+    updatedAt: validUpdatedAt(row.updated_at),
+  }
+}
 
 export async function getProductBySlug(slug: string, locale: Locale = defaultLocale) {
   return (await fetchProductsData(locale)).find((product) => product.slug === slug) || null
@@ -74,5 +89,6 @@ export async function fetchActiveProductsForSitemap(): Promise<SitemapProduct[]>
     .eq('is_active', true)
     .order('sort_order')
 
-  return strictSitemapRecords(data as SitemapProduct[] | null, error)
+  return strictSitemapRecords(data as SitemapProductRow[] | null, error)
+    .map(mapSitemapProductRow)
 }

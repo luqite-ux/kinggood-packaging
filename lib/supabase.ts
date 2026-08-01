@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-import { createTimeoutFetch } from '@/lib/fetch-with-timeout'
+import { createTimeoutFetch } from './fetch-with-timeout.ts'
 
 let client: SupabaseClient | null | undefined
 const supabaseFetch = createTimeoutFetch(8_000)
