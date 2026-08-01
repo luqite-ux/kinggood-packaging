@@ -22,6 +22,7 @@ export function ProductDetailPageBody({
   related,
 }: ProductDetailPageBodyProps) {
   const slug = product.slug
+  const pageContent = dictionary.content.productDetail
 
   return (
     <>
@@ -34,7 +35,7 @@ export function ProductDetailPageBody({
           <div className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-20">
 
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-sm text-white/70">
+            <nav aria-label={pageContent.breadcrumb} className="mb-8 flex items-center gap-2 text-sm text-white/70">
               <Link href={localizePath('/', locale)} className="hover:text-white">
                 {dictionary.navigation.home}
               </Link>
@@ -69,7 +70,9 @@ export function ProductDetailPageBody({
                       >
                         <Image
                           src={src}
-                          alt={`${product.name} view ${i + 2}`}
+                          alt={pageContent.galleryView
+                            .replace('{product}', product.name)
+                            .replace('{number}', String(i + 2))}
                           fill
                           sizes="80px"
                           className="object-cover"
@@ -139,7 +142,7 @@ export function ProductDetailPageBody({
                     id={`${slug}-overview`}
                     className="text-2xl font-bold tracking-tight text-[#0f1b2d] sm:text-3xl"
                   >
-                    Product Overview
+                    {pageContent.overview}
                   </h2>
                   <p className="mt-5 text-base leading-relaxed text-[#5a7085]">
                     {product.summary}
@@ -149,7 +152,7 @@ export function ProductDetailPageBody({
                 {/* Key Advantages */}
                 <Reveal delay={0.05} className="mt-12">
                   <h2 className="text-xl font-bold tracking-tight text-[#0f1b2d]">
-                    Key Advantages
+                    {pageContent.advantages}
                   </h2>
                   <div className="mt-6 grid gap-5 sm:grid-cols-2">
                     {product.highlights.map((h) => (
@@ -235,7 +238,7 @@ export function ProductDetailPageBody({
                       {dictionary.productOverlays.specifications}
                     </h3>
                     <p className="mt-1 text-xs text-[#5a7085]">
-                      All specifications confirmed per project.
+                      {pageContent.specificationNote}
                     </p>
                     <dl className="mt-5 divide-y divide-[#d8e1eb]">
                       {product.specs.map((s) => (
@@ -277,7 +280,7 @@ export function ProductDetailPageBody({
                   id={`${slug}-related`}
                   className="text-xl font-bold tracking-tight text-[#0f1b2d] sm:text-2xl"
                 >
-                  Related products
+                  {pageContent.related}
                 </h2>
               </Reveal>
               <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,5 +1,132 @@
 import type { Locale } from './config'
 
+export type LocalizedCategory = {
+  key: 'pallets' | 'crates' | 'cable-reels'
+  name: string
+  eyebrow: string
+  description: string
+}
+
+export type LocalizedStat = {
+  value: string
+  label: string
+  suffix: string
+  note?: string
+}
+
+export type LocalizedCard = { title: string; description: string; icon: string }
+export type LocalizedStep = { step: string; title: string; description: string }
+export type LocalizedIndustry = {
+  key: string
+  title: string
+  description: string
+  icon: string
+}
+export type LocalizedFaq = { q: string; a: string }
+
+export type LocalizedContent = {
+  shared: {
+    brandLockup: string
+    footerProducts: { slug: string; name: string }[]
+    categories: LocalizedCategory[]
+    stats: LocalizedStat[]
+    advantages: LocalizedCard[]
+    customPackagingSteps: LocalizedStep[]
+    industries: LocalizedIndustry[]
+    faqPreview: LocalizedFaq[]
+  }
+  home: {
+    marquee: string[]
+    products: {
+      label: string
+      title: string
+      description: string
+      productListLabel: string
+      viewAll: string
+    }
+    metricsAriaLabel: string
+    why: { label: string; title: string }
+    process: { label: string; title: string; description: string; details: string; stepLabel: string }
+    industries: { label: string; title: string; all: string }
+    facility: {
+      label: string
+      title: string
+      description: string
+      images: { factoryExterior: string; productionWorkshop: string; warehouse: string }
+      more: string
+    }
+    quality: {
+      label: string
+      title: string
+      description: string
+      ariaLabel: string
+      points: string[]
+      imageAlt: string
+    }
+    faq: { label: string; title: string }
+    cta: { title: string; description: string }
+  }
+  products: { ctaTitle: string; ctaDescription: string }
+  productDetail: {
+    breadcrumb: string
+    galleryView: string
+    overview: string
+    advantages: string
+    specificationNote: string
+    related: string
+  }
+  about: {
+    workshopImageAlt: string
+    storyLabel: string
+    storyTitle: string
+    storyParagraphs: string[]
+    values: string[]
+    statsAriaLabel: string
+    facilityLabel: string
+    facilityTitle: string
+    facilityDescription: string
+    gallery: { alt: string; caption: string }[]
+    capabilityLabel: string
+    capabilityTitle: string
+    capabilities: { title: string; description: string; icon: string }[]
+    ctaTitle: string
+    ctaDescription: string
+  }
+  contact: {
+    phoneWeChat: string
+    businessHours: string
+    businessHoursValue: string
+    introduction: string
+  }
+  customPackaging: {
+    introLabel: string
+    introTitle: string
+    introParagraphs: string[]
+    capabilities: string[]
+    warehouseImageAlt: string
+    processLabel: string
+    processTitle: string
+    processDescription: string
+    productsLabel: string
+    productsTitle: string
+    productCards: { title: string; description: string; href: string }[]
+    ctaTitle: string
+    ctaDescription: string
+  }
+  industries: {
+    label: string
+    introTitle: string
+    introDescription: string
+    relatedProducts: string
+    requirementsLabel: string
+    requirementsTitle: string
+    requirementsDescription: string
+    requirements: { title: string; description: string }[]
+    ctaTitle: string
+    ctaDescription: string
+  }
+}
+
 export type Dictionary = {
   locale: Locale
   languageName: string
@@ -16,7 +143,10 @@ export type Dictionary = {
     mobileNavigation: string
     openMenu: string
     closeMenu: string
+    languageSelection: string
+    logoAlt: string
   }
+  languages: Record<Locale, { shortLabel: string; fullName: string }>
   actions: {
     requestQuote: string
     exploreProducts: string
@@ -71,6 +201,7 @@ export type Dictionary = {
     enquiryReceived: string
     enquiryReceivedDescription: string
     enquiryFailed: string
+    websiteEnquiry: string
   }
   pages: {
     products: { eyebrow: string; title: string; description: string }
@@ -111,4 +242,5 @@ export type Dictionary = {
     minimumOrderQuantity: string
     rfq: string
   }
+  content: LocalizedContent
 }

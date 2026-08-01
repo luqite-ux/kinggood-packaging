@@ -31,6 +31,23 @@ export type LanguageSwitcherLink = {
   isCurrent: boolean
 }
 
+export type LanguageOption = {
+  shortLabel: string
+  fullName: string
+}
+
+export type LanguageSwitcherItem = {
+  locale: Locale
+  href: string
+  hrefLang: Locale
+  lang: Locale
+  shortLabel: string
+  fullName: string
+  ariaCurrent: 'page' | undefined
+}
+
+const oneYearInSeconds = 60 * 60 * 24 * 365
+
 function normalizeCurrentPath(currentPath: string): string {
   const pathWithoutQuery = currentPath.split(/[?#]/, 1)[0] || '/'
   const normalized = `/${pathWithoutQuery.replace(/^\/+/, '')}`
@@ -56,4 +73,31 @@ export function buildLanguageSwitcherLinks(
     href: localizePath(normalizedPath, locale),
     isCurrent: locale === currentLocale,
   }))
+}
+
+export function buildLanguageSwitcherItems(
+  currentLocale: Locale,
+  currentPath: string,
+  languageOptions: Record<Locale, LanguageOption>,
+): LanguageSwitcherItem[] {
+  return buildLanguageSwitcherLinks(currentLocale, currentPath).map((link) => ({
+    locale: link.locale,
+    href: link.href,
+    hrefLang: link.locale,
+    lang: link.locale,
+    shortLabel: languageOptions[link.locale].shortLabel,
+    fullName: languageOptions[link.locale].fullName,
+    ariaCurrent: link.isCurrent ? 'page' : undefined,
+  }))
+}
+
+export function serializeLocaleCookie(locale: Locale): string {
+  if (!isLocale(locale)) throw new Error(`Unsupported locale: ${String(locale)}`)
+  return `kinggood_locale=${locale}; Max-Age=${oneYearInSeconds}; Path=/; SameSite=Lax`
+}
+
+export function localizeNavigationHref(href: string, locale: Locale): string {
+  const isSingleSlashPath = href.startsWith('/') && !href.startsWith('//')
+  const isAdminPath = href === '/admin' || href.startsWith('/admin/')
+  return isSingleSlashPath && !isAdminPath ? localizePath(href, locale) : href
 }

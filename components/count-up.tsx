@@ -35,7 +35,7 @@ export function CountUp({ value, suffix = '', className }: CountUpProps) {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [inView, isNumeric, target])
+  }, [grouped, inView, isNumeric, target])
 
   return (
     <span ref={ref} className={className}>

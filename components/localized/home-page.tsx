@@ -18,13 +18,7 @@ import { Reveal } from '@/components/reveal'
 import {
   productsWithShortName as defaultProducts,
   type Product,
-  categories,
-  customPackagingSteps,
-  industriesList as industries,
-  advantages,
-  faq,
   company,
-  stats as metrics,
   IMAGES,
 } from '@/lib/site'
 import { localizePath, type Locale } from '@/lib/i18n/config'
@@ -59,8 +53,15 @@ export function HomePageBody({
   dictionary,
   products = defaultProducts,
 }: HomePageBodyProps) {
-  const productCategories = categories.map((category) => ({
+  const { home, shared } = dictionary.content
+  const categoryImages = {
+    pallets: '/product-iso-pallet.png',
+    crates: '/product-solid-crate.png',
+    'cable-reels': '/product-cable-reel.jpg',
+  }
+  const productCategories = shared.categories.map((category) => ({
     ...category,
+    image: categoryImages[category.key],
     products: products.filter((product) => product.category === category.key),
   }))
 
@@ -73,23 +74,21 @@ export function HomePageBody({
         <Hero locale={locale} dictionary={dictionary} />
 
         {/* ── 2. Marquee ──────────────────────────────────────────────── */}
-        <Marquee />
+        <Marquee items={home.marquee} />
 
         {/* ── 3. Product categories ───────────────────────────────────── */}
         <section className="bg-white py-20 lg:py-28" aria-labelledby="categories-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <SectionLabel>Our Products</SectionLabel>
+              <SectionLabel>{home.products.label}</SectionLabel>
               <h2
                 id="categories-heading"
                 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
               >
-                Three product families for every logistics requirement
+                {home.products.title}
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#5a7085]">
-                Standard pallets for high-volume export, engineered crates for heavy machinery,
-                and purpose-built cable reel structures — each configured to your cargo, handling
-                equipment and destination.
+                {home.products.description}
               </p>
             </Reveal>
 
@@ -114,7 +113,10 @@ export function HomePageBody({
                       <p className="flex-1 text-sm leading-relaxed text-[#5a7085]">
                         {cat.description}
                       </p>
-                      <ul className="mt-4 space-y-2" aria-label={`${cat.name} products`}>
+                      <ul
+                        className="mt-4 space-y-2"
+                        aria-label={home.products.productListLabel.replace('{category}', cat.name)}
+                      >
                         {cat.products.map((p) => (
                           <li key={p.slug}>
                             <Link
@@ -143,10 +145,10 @@ export function HomePageBody({
         </section>
 
         {/* ── 4. Capability metrics ───────────────────────────────────── */}
-        <section className="bg-[#0d4077] py-14" aria-label="Capability metrics">
+        <section className="bg-[#0d4077] py-14" aria-label={home.metricsAriaLabel}>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <dl className="grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-5">
-              {metrics.map((m) => (
+              {shared.stats.map((m) => (
                 <div key={m.label} className="border-l-2 border-[#e8a020] pl-4">
                   <dt className="text-2xl font-bold tabular-nums text-white">
                     <CountUpStat value={m.value} suffix={m.suffix} />
@@ -167,17 +169,17 @@ export function HomePageBody({
         <section className="bg-[#f0f4f8] py-20 lg:py-28" aria-labelledby="why-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <SectionLabel>Why KINGGOOD</SectionLabel>
+              <SectionLabel>{home.why.label}</SectionLabel>
               <h2
                 id="why-heading"
                 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
               >
-                Built around your logistics requirements
+                {home.why.title}
               </h2>
             </Reveal>
 
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {advantages.map((item, i) => {
+              {shared.advantages.map((item, i) => {
                 const Icon = ICON_MAP[item.icon]
                 return (
                   <Reveal key={item.title} delay={i * 0.07}>
@@ -204,17 +206,15 @@ export function HomePageBody({
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-start">
               <Reveal x={-64} y={0}>
-                <SectionLabel>Custom Packaging Process</SectionLabel>
+                <SectionLabel>{home.process.label}</SectionLabel>
                 <h2
                   id="process-heading"
                   className="mt-4 text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
                 >
-                  From cargo dimensions to finished packaging
+                  {home.process.title}
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-[#5a7085]">
-                  Non-standard crates, custom pallets and cable reels follow a structured
-                  design-to-delivery process. MOQ and lead time depend on design complexity,
-                  material, quantity and delivery requirements.
+                  {home.process.description}
                 </p>
                 <Link
                   href={localizePath('/custom-packaging', locale)}
@@ -226,12 +226,12 @@ export function HomePageBody({
               </Reveal>
 
               <div className="mt-12 space-y-4 lg:mt-0">
-                {customPackagingSteps.slice(0, 4).map((step, i) => (
+                {shared.customPackagingSteps.slice(0, 4).map((step, i) => (
                   <Reveal key={step.step} delay={i * 0.09} x={64} y={0}>
                     <div className="flex gap-4 rounded-lg border border-[#d8e1eb] bg-[#f0f4f8] p-5">
                       <span
                         className="mt-0.5 shrink-0 text-sm font-bold tabular-nums text-[#8a5600]"
-                        aria-label={`Step ${step.step}`}
+                        aria-label={home.process.stepLabel.replace('{step}', step.step)}
                       >
                         {step.step}
                       </span>
@@ -254,12 +254,12 @@ export function HomePageBody({
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               <Reveal>
-                <SectionLabel>Industries Served</SectionLabel>
+                <SectionLabel>{home.industries.label}</SectionLabel>
                 <h2
                   id="industries-heading"
                   className="mt-4 max-w-xl text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
                 >
-                  Packaging configured to industry requirements
+                  {home.industries.title}
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
@@ -267,14 +267,14 @@ export function HomePageBody({
                   href={localizePath('/industries', locale)}
                   className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-[#0d4077] hover:underline"
                 >
-                  {dictionary.navigation.industries}
+                  {home.industries.all}
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
               </Reveal>
             </div>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {industries.map((ind, i) => (
+              {shared.industries.map((ind, i) => (
                 <Reveal key={ind.key} delay={i * 0.06}>
                   <div className="rounded-lg border border-[#d8e1eb] bg-white p-6 h-full">
                     <h3 className="text-base font-bold text-[#0f1b2d]">{ind.title}</h3>
@@ -295,24 +295,23 @@ export function HomePageBody({
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <SectionLabel dark>Our Facility</SectionLabel>
+              <SectionLabel dark>{home.facility.label}</SectionLabel>
               <h2
                 id="factory-heading"
                 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-white text-balance sm:text-4xl"
               >
-                36,300 m² manufacturing facility in Nantong, Jiangsu
+                {home.facility.title}
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70">
-                Five workshops, five automated production lines and seven customised production
-                lines support high-volume standard orders alongside complex, non-standard projects.
+                {home.facility.description}
               </p>
             </Reveal>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {([
-                { src: IMAGES.factoryExterior,    label: 'Factory exterior'           },
-                { src: IMAGES.productionWorkshop, label: 'Production workshop'        },
-                { src: IMAGES.crateWarehouse,     label: 'Finished goods warehouse'   },
+                { src: IMAGES.factoryExterior, label: home.facility.images.factoryExterior },
+                { src: IMAGES.productionWorkshop, label: home.facility.images.productionWorkshop },
+                { src: IMAGES.crateWarehouse, label: home.facility.images.warehouse },
               ] as const).map((img, i) => (
                 <Reveal key={img.src} delay={i * 0.08}>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
@@ -337,7 +336,7 @@ export function HomePageBody({
                 href={localizePath('/about', locale)}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white"
               >
-                {dictionary.actions.learnMore}
+                {home.facility.more}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
             </Reveal>
@@ -349,26 +348,18 @@ export function HomePageBody({
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
               <Reveal>
-                <SectionLabel>Quality &amp; Delivery</SectionLabel>
+                <SectionLabel>{home.quality.label}</SectionLabel>
                 <h2
                   id="quality-heading"
                   className="mt-4 text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
                 >
-                  Inspection support and freight coordination
+                  {home.quality.title}
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-[#5a7085]">
-                  Outgoing quality inspection is standard on every order. Third-party inspection
-                  before shipment can be arranged on request. We coordinate with your forwarder or
-                  introduce logistics partners to support documentation and container loading.
+                  {home.quality.description}
                 </p>
-                <ul className="mt-6 space-y-3" aria-label="Quality and delivery capabilities">
-                  {[
-                    'Outgoing quality inspection on every order',
-                    'Third-party inspection at the factory available on request',
-                    'Production progress updates during manufacturing',
-                    'Export documentation and freight coordination support',
-                    'Sample or drawing approval before mass production begins',
-                  ].map((point) => (
+                <ul className="mt-6 space-y-3" aria-label={home.quality.ariaLabel}>
+                  {home.quality.points.map((point) => (
                     <li key={point} className="flex items-start gap-3 text-sm text-[#3a5068]">
                       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#e8a020]" aria-hidden />
                       {point}
@@ -381,7 +372,7 @@ export function HomePageBody({
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                   <Image
                     src={IMAGES.productionWorkshop}
-                    alt="KINGGOOD production line"
+                    alt={home.quality.imageAlt}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover"
@@ -396,18 +387,17 @@ export function HomePageBody({
         <section className="bg-[#f0f4f8] py-20 lg:py-28" aria-labelledby="faq-heading">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <Reveal className="text-center">
-              <SectionLabel>FAQ</SectionLabel>
+              <SectionLabel>{home.faq.label}</SectionLabel>
               <h2
                 id="faq-heading"
                 className="mt-4 text-3xl font-bold tracking-tight text-[#0f1b2d] sm:text-4xl"
               >
-                Frequently asked questions
+                {home.faq.title}
               </h2>
             </Reveal>
 
             <div className="mt-12 space-y-3">
-              {faq.slice(0, 3).flatMap((g) =>
-                g.items.slice(0, 2).map((item) => (
+              {shared.faqPreview.map((item) => (
                   <Reveal key={item.q}>
                     <details className="group rounded-lg border border-[#d8e1eb] bg-white">
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 text-sm font-semibold text-[#0f1b2d] hover:bg-[#f7f9fc]">
@@ -422,8 +412,7 @@ export function HomePageBody({
                       </div>
                     </details>
                   </Reveal>
-                ))
-              )}
+                ))}
             </div>
 
             <Reveal delay={0.1} className="mt-8 text-center">
@@ -450,11 +439,10 @@ export function HomePageBody({
                 id="rfq-cta-heading"
                 className="text-3xl font-bold tracking-tight text-white text-balance sm:text-4xl"
               >
-                Ready to discuss your packaging requirements?
+                {home.cta.title}
               </h2>
               <p className="mt-5 text-base leading-relaxed text-white/75 text-pretty">
-                Share your cargo weight, dimensions and destination. Our team will recommend
-                the right product and prepare a competitive quote.
+                {home.cta.description}
               </p>
               <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
                 <Link

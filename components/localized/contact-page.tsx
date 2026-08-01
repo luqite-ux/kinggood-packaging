@@ -15,11 +15,12 @@ type ContactPageBodyProps = {
 }
 
 export function ContactPageBody({ locale, dictionary, products }: ContactPageBodyProps) {
+  const pageContent = dictionary.content.contact
   const details = [
     { icon: MapPin, label: dictionary.footer.location, value: company.address },
-    { icon: Phone, label: 'Phone / WeChat', value: company.phone, href: `tel:${company.phoneRaw}` },
+    { icon: Phone, label: pageContent.phoneWeChat, value: company.phone, href: `tel:${company.phoneRaw}` },
     { icon: Mail, label: dictionary.forms.email, value: company.email, href: `mailto:${company.email}` },
-    { icon: Clock, label: 'Business hours', value: 'Mon – Sat, 8:30 – 18:00 (GMT+8)' },
+    { icon: Clock, label: pageContent.businessHours, value: pageContent.businessHoursValue },
   ]
 
   return (
@@ -49,8 +50,7 @@ export function ContactPageBody({ locale, dictionary, products }: ContactPageBod
                     {dictionary.navigation.contact}
                   </h2>
                   <p className="mt-4 text-base leading-relaxed text-[#5a7085] text-pretty">
-                    We work with importers, distributors and manufacturers worldwide. Reach out
-                    directly or send an enquiry and we&apos;ll respond within one business day.
+                    {pageContent.introduction}
                   </p>
                 </Reveal>
 

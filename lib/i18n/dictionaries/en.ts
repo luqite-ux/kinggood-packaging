@@ -1,4 +1,5 @@
 import type { Dictionary } from '../types'
+import { localizedContent } from '../content.ts'
 
 const en = {
   locale: 'en',
@@ -7,6 +8,11 @@ const en = {
     home: 'Home', products: 'Products', customPackaging: 'Custom Packaging', industries: 'Industries',
     about: 'About', news: 'News', contact: 'Contact', requestQuote: 'Request a Quote',
     mainNavigation: 'Main navigation', mobileNavigation: 'Mobile navigation', openMenu: 'Open menu', closeMenu: 'Close menu',
+    languageSelection: 'Language selection', logoAlt: 'KINGGOOD home',
+  },
+  languages: {
+    en: { shortLabel: 'EN', fullName: 'English' }, zh: { shortLabel: '中文', fullName: 'Simplified Chinese' },
+    de: { shortLabel: 'DE', fullName: 'German' }, es: { shortLabel: 'ES', fullName: 'Spanish' },
   },
   actions: {
     requestQuote: 'Request a Quote', exploreProducts: 'Explore Products', viewProduct: 'View product',
@@ -37,6 +43,7 @@ const en = {
     requiredField: '{field} is required.', invalidEmail: 'Enter a valid email address.',
     enquiryReceived: 'Thank you for your enquiry', enquiryReceivedDescription: 'Our export team has received your message and will get back to you within one business day.',
     enquiryFailed: 'We could not send your enquiry. Please try again or email kinggood66@163.com.',
+    websiteEnquiry: 'Website enquiry',
   },
   pages: {
     products: { eyebrow: 'Our Products', title: 'Wood Packaging for Every Logistics Challenge', description: 'Explore engineered pallets, heavy-duty crates and cable reels made for industrial handling and export.' },
@@ -60,6 +67,7 @@ const en = {
     category: 'Category', materials: 'Materials', dimensions: 'Dimensions', applications: 'Applications', specifications: 'Specifications',
     handlingNotes: 'Handling Notes', requestQuote: 'Request a Quote', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',
   },
+  content: localizedContent.en,
 } satisfies Dictionary
 
 export default en

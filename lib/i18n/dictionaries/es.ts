@@ -1,4 +1,5 @@
 import type { Dictionary } from '../types'
+import { localizedContent } from '../content.ts'
 
 const es = {
   locale: 'es',
@@ -6,6 +7,11 @@ const es = {
   navigation: {
     home: 'Inicio', products: 'Productos', customPackaging: 'Embalaje a medida', industries: 'Industrias', about: 'Nosotros', news: 'Noticias', contact: 'Contacto', requestQuote: 'Solicitar presupuesto',
     mainNavigation: 'Navegación principal', mobileNavigation: 'Navegación móvil', openMenu: 'Abrir menú', closeMenu: 'Cerrar menú',
+    languageSelection: 'Selección de idioma', logoAlt: 'Inicio de KINGGOOD',
+  },
+  languages: {
+    en: { shortLabel: 'EN', fullName: 'Inglés' }, zh: { shortLabel: '中文', fullName: 'Chino simplificado' },
+    de: { shortLabel: 'DE', fullName: 'Alemán' }, es: { shortLabel: 'ES', fullName: 'Español' },
   },
   actions: {
     requestQuote: 'Solicitar presupuesto', exploreProducts: 'Explorar productos', viewProduct: 'Ver producto', readMore: 'Leer más', learnMore: 'Más información',
@@ -33,6 +39,7 @@ const es = {
     requiredField: 'El campo {field} es obligatorio.', invalidEmail: 'Introduzca una dirección de correo electrónico válida.',
     enquiryReceived: 'Gracias por su consulta', enquiryReceivedDescription: 'Nuestro equipo de exportación ha recibido su mensaje y le responderá en un día hábil.',
     enquiryFailed: 'No pudimos enviar su consulta. Inténtelo de nuevo o escriba a kinggood66@163.com.',
+    websiteEnquiry: 'Consulta del sitio web',
   },
   pages: {
     products: { eyebrow: 'Nuestros productos', title: 'Embalaje de madera para cada reto logístico', description: 'Explore palés diseñados, cajas de alta resistencia y carretes para cables para la manipulación industrial y la exportación.' },
@@ -56,6 +63,7 @@ const es = {
     category: 'Categoría', materials: 'Materiales', dimensions: 'Dimensiones', applications: 'Aplicaciones', specifications: 'Especificaciones', handlingNotes: 'Notas de manipulación',
     requestQuote: 'Solicitar presupuesto', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',
   },
+  content: localizedContent.es,
 } satisfies Dictionary
 
 export default es

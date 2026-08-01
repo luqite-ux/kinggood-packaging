@@ -5,7 +5,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { PageHero } from '@/components/page-hero'
 import { Reveal } from '@/components/reveal'
-import { categories, company, IMAGES, type Product } from '@/lib/site'
+import { company, IMAGES, type Product } from '@/lib/site'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/types'
 
@@ -16,7 +16,8 @@ type ProductsPageBodyProps = {
 }
 
 export function ProductsPageBody({ locale, dictionary, products }: ProductsPageBodyProps) {
-  const productCategories = categories.map((category) => ({
+  const { products: pageContent, shared } = dictionary.content
+  const productCategories = shared.categories.map((category) => ({
     ...category,
     products: products.filter((product) => product.category === category.key),
   }))
@@ -48,7 +49,7 @@ export function ProductsPageBody({ locale, dictionary, products }: ProductsPageB
               <Reveal>
                 <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
-                  {catIndex === 0 ? 'Pallets' : catIndex === 1 ? 'Crates' : 'Cable Reels'}
+                  {cat.eyebrow}
                 </p>
                 <h2
                   id={`cat-${cat.key}`}
@@ -137,11 +138,10 @@ export function ProductsPageBody({ locale, dictionary, products }: ProductsPageB
                 id="products-cta"
                 className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
               >
-                Not sure which product suits your requirement?
+                {pageContent.ctaTitle}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-white/70">
-                Share your cargo weight, dimensions and destination. We will identify the right
-                product and confirm specifications for your project.
+                {pageContent.ctaDescription}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link

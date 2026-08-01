@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { NewsArticlePageBody } from '@/components/localized/news-article-page'
 import { getArticleBySlug } from '@/lib/articles-db'
-import { NewsArticleClient } from './news-article-client'
+import { defaultLocale } from '@/lib/i18n/config'
+import { getDictionary } from '@/lib/i18n/get-dictionary'
 import { absoluteUrl, serializeJsonLd, SITE_URL } from '@/lib/seo'
+
 export const revalidate = 60
 export const dynamicParams = true
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const article = await getArticleBySlug((await params).slug)
   if (!article) return { title: 'Article not found' }
@@ -30,9 +34,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     },
   }
 }
+
 export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const article = await getArticleBySlug((await params).slug)
   if (!article) notFound()
+  const dictionary = await getDictionary(defaultLocale)
   const articleUrl = `${SITE_URL}/news/${article.slug}`
   const structuredData = {
     '@context': 'https://schema.org',
@@ -51,17 +57,21 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-          { '@type': 'ListItem', position: 2, name: 'News', item: `${SITE_URL}/news` },
+          { '@type': 'ListItem', position: 1, name: dictionary.navigation.home, item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: dictionary.navigation.news, item: `${SITE_URL}/news` },
           { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
         ],
       },
     ],
   }
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
-      <NewsArticleClient article={article} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
+      />
+      <NewsArticlePageBody locale={defaultLocale} dictionary={dictionary} article={article} />
     </>
   )
 }

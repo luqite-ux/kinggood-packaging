@@ -4,7 +4,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { PageHero } from '@/components/page-hero'
 import { Reveal } from '@/components/reveal'
-import { industries, products as defaultProducts, company, IMAGES, type Product } from '@/lib/site'
+import { products as defaultProducts, company, IMAGES, type Product } from '@/lib/site'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/types'
 
@@ -38,6 +38,7 @@ export function IndustriesPageBody({
   dictionary,
   products = defaultProducts,
 }: IndustriesPageBodyProps) {
+  const { industries: pageContent, shared } = dictionary.content
   return (
     <>
       <SiteHeader locale={locale} dictionary={dictionary} />
@@ -61,22 +62,21 @@ export function IndustriesPageBody({
             <Reveal>
               <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
-                Sectors
+                {pageContent.label}
               </p>
               <h2
                 id="industries-heading"
                 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
               >
-                Industries we supply
+                {pageContent.introTitle}
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#5a7085]">
-                Each sector card links to the products most commonly configured for that industry.
-                For non-standard requirements, share your cargo details and we will advise.
+                {pageContent.introDescription}
               </p>
             </Reveal>
 
             <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {industries.map((ind, i) => {
+              {shared.industries.map((ind, i) => {
                 const Icon = ICON_MAP[ind.icon]
                 const relatedSlugs = INDUSTRY_PRODUCTS[ind.key] ?? []
                 const relatedProducts = relatedSlugs
@@ -99,7 +99,7 @@ export function IndustriesPageBody({
                       {relatedProducts.length > 0 && (
                         <div className="mt-5 border-t border-[#d8e1eb] pt-5">
                           <p className="mb-2.5 text-xs font-bold uppercase tracking-widest text-[#5a7085]">
-                            Related products
+                            {pageContent.relatedProducts}
                           </p>
                           <ul className="space-y-1.5">
                             {relatedProducts.map((p) => (
@@ -131,46 +131,27 @@ export function IndustriesPageBody({
               <Reveal>
                 <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
-                  Common requirements
+                  {pageContent.requirementsLabel}
                 </p>
                 <h2
                   id="requirements-heading"
                   className="mt-4 text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
                 >
-                  What most customers ask us to address
+                  {pageContent.requirementsTitle}
                 </h2>
                 <p className="mt-4 text-base leading-relaxed text-[#5a7085]">
-                  Across all industries, the recurring questions centre on weight capacity,
-                  compliance, lead time and the ability to repeat a confirmed specification
-                  reliably over multiple orders.
+                  {pageContent.requirementsDescription}
                 </p>
               </Reveal>
               <Reveal delay={0.1}>
                 <ul className="space-y-4">
-                  {[
-                    {
-                      q: 'ISPM 15 / IPPC compliance',
-                      a: 'Heat treatment and fumigation support for all destinations that require phytosanitary treatment of wood packaging.',
-                    },
-                    {
-                      q: 'Precise load capacity',
-                      a: 'Static and dynamic load ratings are confirmed per design based on cargo weight, stacking height and handling method.',
-                    },
-                    {
-                      q: 'Consistent repeat supply',
-                      a: 'Once a specification is confirmed, subsequent orders are produced to the same drawing — no dimension creep or material substitution without approval.',
-                    },
-                    {
-                      q: 'Short and predictable lead times',
-                      a: 'Standard products from confirmed stock have shorter lead times; custom items are scheduled from approval. Lead times are confirmed per order.',
-                    },
-                  ].map((item) => (
+                  {pageContent.requirements.map((item) => (
                     <li
-                      key={item.q}
+                      key={item.title}
                       className="rounded-lg border border-[#d8e1eb] bg-white p-5"
                     >
-                      <p className="text-sm font-bold text-[#0f1b2d]">{item.q}</p>
-                      <p className="mt-1.5 text-sm leading-relaxed text-[#5a7085]">{item.a}</p>
+                      <p className="text-sm font-bold text-[#0f1b2d]">{item.title}</p>
+                      <p className="mt-1.5 text-sm leading-relaxed text-[#5a7085]">{item.description}</p>
                     </li>
                   ))}
                 </ul>
@@ -187,11 +168,10 @@ export function IndustriesPageBody({
                 id="industries-cta"
                 className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
               >
-                Not sure which product fits your industry?
+                {pageContent.ctaTitle}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-white/70">
-                Share your cargo details — weight, dimensions, destination and handling method —
-                and our team will identify the right product for your application.
+                {pageContent.ctaDescription}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link

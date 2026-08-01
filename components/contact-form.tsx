@@ -7,6 +7,7 @@ import { getSupabaseClient } from '@/lib/supabase'
 import type { Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
+import { submitInquiryWithClient } from '@/lib/contact-form'
 
 type ContactFormProps = {
   locale?: Locale
@@ -62,20 +63,26 @@ export function ContactForm({
 
     setValidationErrors({})
     setStatus('submitting')
-    const supabase = getSupabaseClient()
     const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
-    if (!supabase || !tenantId) return setStatus('error')
     const product = String(values.get('product') || '')
     const country = String(values.get('country') || '')
-    const { error } = await supabase.from('inquiries').insert({
-      tenant_id: tenantId,
-      name,
-      email,
-      company: String(values.get('company') || ''),
-      subject: product || 'Website enquiry',
-      message: [message, country && `Country / Region: ${country}`].filter(Boolean).join('\n\n'),
-    })
-    if (error) return setStatus('error')
+    const submitted = await submitInquiryWithClient(
+      () => getSupabaseClient(),
+      (supabase) => tenantId
+        ? supabase.from('inquiries').insert({
+            tenant_id: tenantId,
+            name,
+            email,
+            company: String(values.get('company') || ''),
+            subject: product || dictionary.forms.websiteEnquiry,
+            message: [
+              message,
+              country && `${dictionary.forms.countryRegion}: ${country}`,
+            ].filter(Boolean).join('\n\n'),
+          })
+        : Promise.resolve({ error: new Error('Tenant is unavailable') }),
+    )
+    if (!submitted) return setStatus('error')
     form.reset()
     setStatus('success')
   }

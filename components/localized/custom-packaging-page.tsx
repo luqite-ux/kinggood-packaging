@@ -5,7 +5,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { PageHero } from '@/components/page-hero'
 import { Reveal } from '@/components/reveal'
-import { customPackagingSteps, company, IMAGES } from '@/lib/site'
+import { company, IMAGES } from '@/lib/site'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/types'
 
@@ -14,17 +14,9 @@ type CustomPackagingPageBodyProps = {
   dictionary: Dictionary
 }
 
-const capabilities = [
-  'Any cargo dimension — we work to your footprint, not ours',
-  'Solid wood, plywood or combination structures',
-  'Treatment and documentation per destination requirements',
-  'Phytosanitary treatment (ISPM 15) support where applicable',
-  'Drawing or sample approval before mass production',
-  'Third-party inspection support at the factory',
-  'Freight coordination from factory to destination',
-]
-
 export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingPageBodyProps) {
+  const { customPackaging: pageContent, shared } = dictionary.content
+  const productImages = [IMAGES.palletSingle, IMAGES.openFrameCrates, IMAGES.cableReelLarge]
   return (
     <>
       <SiteHeader locale={locale} dictionary={dictionary} />
@@ -49,28 +41,22 @@ export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingP
               <Reveal>
                 <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                   <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
-                  Why custom packaging
+                  {pageContent.introLabel}
                 </p>
                 <h2
                   id="custom-intro"
                   className="mt-4 text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
                 >
-                  Standard sizes don&apos;t fit every cargo
+                  {pageContent.introTitle}
                 </h2>
-                <p className="mt-4 text-base leading-relaxed text-[#5a7085]">
-                  Many export operations require packaging that matches the exact footprint of
-                  the goods, the handling equipment in use and the inner dimensions of the
-                  containers or trucks. Standard pallet and crate sizes may leave gaps, create
-                  overhang or fail to meet the regulatory requirements of the destination market.
-                </p>
-                <p className="mt-4 text-base leading-relaxed text-[#5a7085]">
-                  KINGGOOD&apos;s customised manufacturing capacity handles everything from a
-                  slightly off-standard pallet dimension through to fully engineered, multi-piece
-                  crates for industrial machinery.
-                </p>
+                {pageContent.introParagraphs.map((paragraph) => (
+                  <p key={paragraph} className="mt-4 text-base leading-relaxed text-[#5a7085]">
+                    {paragraph}
+                  </p>
+                ))}
 
                 <ul className="mt-8 space-y-3">
-                  {capabilities.map((c) => (
+                  {pageContent.capabilities.map((c) => (
                     <li key={c} className="flex items-start gap-3 text-sm text-[#3a5068]">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#8a5600]" aria-hidden />
                       {c}
@@ -83,7 +69,7 @@ export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingP
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                   <Image
                     src={IMAGES.crateWarehouse}
-                    alt="KINGGOOD finished goods warehouse"
+                    alt={pageContent.warehouseImageAlt}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover"
@@ -100,22 +86,21 @@ export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingP
             <Reveal>
               <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
-                Our process
+                {pageContent.processLabel}
               </p>
               <h2
                 id="process-heading"
                 className="mt-4 max-w-xl text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
               >
-                From requirements to finished packaging
+                {pageContent.processTitle}
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#5a7085]">
-                Every custom order follows a structured process. Lead time, MOQ and exact costs
-                depend on design complexity, material, quantity and delivery requirements.
+                {pageContent.processDescription}
               </p>
             </Reveal>
 
             <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {customPackagingSteps.map((step, i) => (
+              {shared.customPackagingSteps.map((step, i) => (
                 <Reveal key={step.step} delay={(i % 3) * 0.07}>
                   <div className="flex flex-col rounded-lg border border-[#d8e1eb] bg-white p-7 h-full">
                     <span className="text-3xl font-bold tabular-nums text-[#8a5600]">
@@ -138,42 +123,23 @@ export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingP
             <Reveal>
               <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8a5600]">
                 <span className="h-px w-5 bg-[#e8a020]" aria-hidden />
-                Products available
+                {pageContent.productsLabel}
               </p>
               <h2
                 id="products-custom"
                 className="mt-4 max-w-xl text-3xl font-bold tracking-tight text-[#0f1b2d] text-balance sm:text-4xl"
               >
-                Custom options across all product lines
+                {pageContent.productsTitle}
               </h2>
             </Reveal>
 
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {([
-                {
-                  title: 'Custom Pallets',
-                  body: 'Solid wood or plywood pallets matched to your carton layout, forklift tine spread, AGV requirements and container inner dimensions.',
-                  image: IMAGES.palletSingle,
-                  href: '/products/custom-sized-pallet',
-                },
-                {
-                  title: 'Custom Crates',
-                  body: 'Solid wood, plywood or open-frame crates for oversized machinery, precision instruments and cargo that cannot be enclosed in a standard box.',
-                  image: IMAGES.openFrameCrates,
-                  href: '/products/open-frame-crate',
-                },
-                {
-                  title: 'Cable Reels',
-                  body: 'Wooden reel structures sized to the cable specification, coil weight and paying-off equipment in use at the destination.',
-                  image: IMAGES.cableReelLarge,
-                  href: '/products/wooden-cable-reels',
-                },
-              ] as const).map((card, i) => (
+              {pageContent.productCards.map((card, i) => (
                 <Reveal key={card.title} delay={i * 0.07}>
                   <div className="group flex flex-col overflow-hidden rounded-lg border border-[#d8e1eb] bg-white transition-all hover:border-[#0d4077]/40 hover:shadow-lg">
                     <div className="relative aspect-[16/9] overflow-hidden bg-[#f0f4f8]">
                       <Image
-                        src={card.image}
+                        src={productImages[i]}
                         alt={card.title}
                         fill
                         sizes="(max-width: 640px) 100vw, 33vw"
@@ -183,7 +149,7 @@ export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingP
                       <span className="absolute bottom-4 left-4 text-base font-bold text-white">{card.title}</span>
                     </div>
                     <div className="flex flex-1 flex-col p-6">
-                      <p className="flex-1 text-sm leading-relaxed text-[#5a7085]">{card.body}</p>
+                      <p className="flex-1 text-sm leading-relaxed text-[#5a7085]">{card.description}</p>
                       <Link
                         href={localizePath(card.href, locale)}
                         className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0d4077] hover:underline"
@@ -211,11 +177,10 @@ export function CustomPackagingPageBody({ locale, dictionary }: CustomPackagingP
                 id="custom-cta"
                 className="text-3xl font-bold tracking-tight text-white text-balance sm:text-4xl"
               >
-                Ready to discuss your custom requirement?
+                {pageContent.ctaTitle}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-white/75">
-                Share your cargo dimensions, weight and destination. We will propose a structure,
-                confirm materials and prepare a competitive quotation.
+                {pageContent.ctaDescription}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link

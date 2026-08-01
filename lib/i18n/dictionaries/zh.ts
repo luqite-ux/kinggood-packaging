@@ -1,4 +1,5 @@
 import type { Dictionary } from '../types'
+import { localizedContent } from '../content.ts'
 
 const zh = {
   locale: 'zh',
@@ -6,6 +7,11 @@ const zh = {
   navigation: {
     home: '首页', products: '产品', customPackaging: '定制包装', industries: '行业应用', about: '关于我们', news: '新闻', contact: '联系我们', requestQuote: '获取报价',
     mainNavigation: '主导航', mobileNavigation: '移动端导航', openMenu: '打开菜单', closeMenu: '关闭菜单',
+    languageSelection: '语言选择', logoAlt: 'KINGGOOD 首页',
+  },
+  languages: {
+    en: { shortLabel: 'EN', fullName: '英语' }, zh: { shortLabel: '中文', fullName: '简体中文' },
+    de: { shortLabel: 'DE', fullName: '德语' }, es: { shortLabel: 'ES', fullName: '西班牙语' },
   },
   actions: {
     requestQuote: '获取报价', exploreProducts: '浏览产品', viewProduct: '查看产品', readMore: '阅读更多', learnMore: '了解更多',
@@ -33,6 +39,7 @@ const zh = {
     requiredField: '请填写{field}。', invalidEmail: '请输入有效的电子邮箱地址。',
     enquiryReceived: '感谢您的询盘', enquiryReceivedDescription: '我们的出口团队已收到您的信息，将在一个工作日内回复。',
     enquiryFailed: '询盘发送失败，请重试或发送邮件至 kinggood66@163.com。',
+    websiteEnquiry: '网站询盘',
   },
   pages: {
     products: { eyebrow: '产品中心', title: '应对每种物流挑战的木质包装', description: '浏览适用于工业搬运和出口运输的工程化托盘、重型木箱和电缆盘。' },
@@ -56,6 +63,7 @@ const zh = {
     category: '类别', materials: '材料', dimensions: '尺寸', applications: '应用', specifications: '技术规格', handlingNotes: '操作注意事项',
     requestQuote: '获取报价', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',
   },
+  content: localizedContent.zh,
 } satisfies Dictionary
 
 export default zh

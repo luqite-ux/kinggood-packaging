@@ -1,4 +1,5 @@
 import type { Dictionary } from '../types'
+import { localizedContent } from '../content.ts'
 
 const de = {
   locale: 'de',
@@ -6,6 +7,11 @@ const de = {
   navigation: {
     home: 'Startseite', products: 'Produkte', customPackaging: 'Maßgeschneiderte Verpackungen', industries: 'Branchen', about: 'Über uns', news: 'Aktuelles', contact: 'Kontakt', requestQuote: 'Angebot anfordern',
     mainNavigation: 'Hauptnavigation', mobileNavigation: 'Mobile Navigation', openMenu: 'Menü öffnen', closeMenu: 'Menü schließen',
+    languageSelection: 'Sprachauswahl', logoAlt: 'KINGGOOD Startseite',
+  },
+  languages: {
+    en: { shortLabel: 'EN', fullName: 'Englisch' }, zh: { shortLabel: '中文', fullName: 'Vereinfachtes Chinesisch' },
+    de: { shortLabel: 'DE', fullName: 'Deutsch' }, es: { shortLabel: 'ES', fullName: 'Spanisch' },
   },
   actions: {
     requestQuote: 'Angebot anfordern', exploreProducts: 'Produkte entdecken', viewProduct: 'Produkt ansehen', readMore: 'Mehr erfahren', learnMore: 'Mehr erfahren',
@@ -33,6 +39,7 @@ const de = {
     requiredField: '{field} ist erforderlich.', invalidEmail: 'Geben Sie eine gültige E-Mail-Adresse ein.',
     enquiryReceived: 'Vielen Dank für Ihre Anfrage', enquiryReceivedDescription: 'Unser Exportteam hat Ihre Nachricht erhalten und meldet sich innerhalb eines Werktags bei Ihnen.',
     enquiryFailed: 'Ihre Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie an kinggood66@163.com.',
+    websiteEnquiry: 'Website-Anfrage',
   },
   pages: {
     products: { eyebrow: 'Unsere Produkte', title: 'Holzverpackungen für jede Logistikaufgabe', description: 'Entdecken Sie technische Paletten, Schwerlastkisten und Kabeltrommeln für industrielle Handhabung und Export.' },
@@ -56,6 +63,7 @@ const de = {
     category: 'Kategorie', materials: 'Materialien', dimensions: 'Abmessungen', applications: 'Anwendungen', specifications: 'Spezifikationen', handlingNotes: 'Hinweise zur Handhabung',
     requestQuote: 'Angebot anfordern', minimumOrderQuantity: 'MOQ', rfq: 'RFQ',
   },
+  content: localizedContent.de,
 } satisfies Dictionary
 
 export default de

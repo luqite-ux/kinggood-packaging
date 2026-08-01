@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
-import { localizePath, type Locale } from '@/lib/i18n/config'
+import { localizeNavigationHref, type Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
 
@@ -50,9 +50,7 @@ export function PageHero({
               <span key={i} className="flex items-center gap-1.5">
                 {c.href ? (
                   <Link
-                    href={c.href.startsWith('/') && !c.href.startsWith('/admin')
-                      ? localizePath(c.href, locale)
-                      : c.href}
+                    href={localizeNavigationHref(c.href, locale)}
                     className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
                     {crumbLabels[c.href] || c.label}

@@ -1,18 +1,4 @@
-const items = [
-  'Wooden Pallets',
-  'Heavy-Duty Wood Crates',
-  'Cable Reels',
-  'Custom Sizing',
-  'Heat Treatment Available',
-  'Solid Wood & Plywood',
-  'Global Export Logistics',
-  'Project-Specific Design',
-  '36,300 m² Facility',
-  '12 Production Lines',
-  '3,000 Pallets / Day',
-]
-
-export function Marquee() {
+export function Marquee({ items }: { items: string[] }) {
   return (
     <div
       className="border-y border-[#d8e1eb] bg-[#f0f4f8] py-4"

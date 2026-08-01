@@ -29,8 +29,6 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => { setOpen(false) }, [pathname])
-
   const localizedNav = [
     { label: dictionary.navigation.home, href: '/' },
     { label: dictionary.navigation.products, href: '/products' },
@@ -70,14 +68,14 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
         >
           <Image
             src={IMAGES.logo}
-            alt={`${company.brand} logo`}
+            alt={dictionary.navigation.logoAlt}
             width={160}
             height={160}
             priority
             className="h-10 w-auto transition-all duration-300 lg:h-11"
           />
           <span className="mt-0.5 whitespace-nowrap text-[7px] font-bold leading-none tracking-[0.22em] lg:text-[8px]">
-            KINGGOOD PACKAGING
+            {dictionary.content.shared.brandLockup}
           </span>
         </Link>
 
@@ -133,6 +131,7 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
           <LanguageSwitcher
             locale={locale}
             currentPath={pathname}
+            dictionary={dictionary}
             className={cn(
               'hidden xl:block',
               scrolled ? 'text-[#0d4077]' : 'text-white',
@@ -176,6 +175,7 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
               <Link
                 key={item.href}
                 href={localizePath(item.href, locale)}
+                onClick={() => setOpen(false)}
                 className={cn(
                   'rounded px-3 py-3 text-[15px] font-medium',
                   isActive(item.href)
@@ -189,10 +189,13 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
             <LanguageSwitcher
               locale={locale}
               currentPath={pathname}
+              dictionary={dictionary}
+              onNavigate={() => setOpen(false)}
               className="mt-3 border-t border-[#d8e1eb] pt-4 text-[#0d4077]"
             />
             <Link
               href={localizePath('/contact', locale)}
+              onClick={() => setOpen(false)}
               className="mt-3 inline-flex items-center justify-center rounded bg-[#0d4077] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0b3260]"
             >
               {dictionary.navigation.requestQuote}

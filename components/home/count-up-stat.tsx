@@ -15,15 +15,10 @@ export function CountUpStat({ value, suffix }: CountUpStatProps) {
   const isInView = useInView(ref, { once: true, margin: '-60px' })
   const reduceMotion = useReducedMotion()
   const target = parseCountValue(value)
-  const [displayValue, setDisplayValue] = useState(reduceMotion ? target : 0)
+  const [displayValue, setDisplayValue] = useState(0)
 
   useEffect(() => {
-    if (reduceMotion) {
-      setDisplayValue(target)
-      return
-    }
-
-    if (!isInView) return
+    if (reduceMotion || !isInView) return
 
     const controls = animate(0, target, {
       duration: 1.6,
@@ -34,9 +29,11 @@ export function CountUpStat({ value, suffix }: CountUpStatProps) {
     return () => controls.stop()
   }, [isInView, reduceMotion, target])
 
+  const visibleValue = reduceMotion ? target : displayValue
+
   return (
     <span ref={ref} aria-label={`${value}${suffix}`}>
-      <span aria-hidden="true">{formatCountValue(displayValue)}{suffix}</span>
+      <span aria-hidden="true">{formatCountValue(visibleValue)}{suffix}</span>
     </span>
   )
 }

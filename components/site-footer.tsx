@@ -4,7 +4,7 @@ import { Phone, Mail, MapPin } from 'lucide-react'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
-import { company, productsWithShortName as products, IMAGES } from '@/lib/site'
+import { company, IMAGES } from '@/lib/site'
 
 type SiteFooterProps = {
   locale?: Locale
@@ -34,13 +34,13 @@ export function SiteFooter({ locale = 'en', dictionary = defaultDictionary }: Si
             <div className="inline-flex flex-col items-center text-white">
               <Image
                 src={IMAGES.logo}
-                alt={`${company.brand} logo`}
+                alt={dictionary.navigation.logoAlt}
                 width={160}
                 height={160}
                 className="h-14 w-auto"
               />
               <span className="mt-1 whitespace-nowrap text-[9px] font-bold leading-none tracking-[0.22em]">
-                KINGGOOD PACKAGING
+                {dictionary.content.shared.brandLockup}
               </span>
             </div>
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#f0f4f8]/70">
@@ -98,13 +98,13 @@ export function SiteFooter({ locale = 'en', dictionary = defaultDictionary }: Si
               {dictionary.footer.products}
             </h3>
             <ul className="mt-5 space-y-3">
-              {products.map((p) => (
+              {dictionary.content.shared.footerProducts.map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={localizePath(`/products/${p.slug}`, locale)}
                     className="text-sm text-[#f0f4f8]/70 transition-colors hover:text-white focus-visible:text-white"
                   >
-                    {p.shortName}
+                    {p.name}
                   </Link>
                 </li>
               ))}
