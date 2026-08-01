@@ -3,22 +3,43 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { Menu, X } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 import { localizePath, type Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
+import {
+  buildSiteHeaderNavigation,
+  resolveInitialHeaderPath,
+} from '@/lib/site-header-navigation'
 import { cn } from '@/lib/utils'
 import { IMAGES } from '@/lib/site'
 
 type SiteHeaderProps = {
   locale?: Locale
   dictionary?: Dictionary
+  initialPath?: string
 }
 
-export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: SiteHeaderProps) {
-  const pathname = usePathname()
+const subscribeToHydration = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
+
+export function SiteHeader({
+  locale = 'en',
+  dictionary = defaultDictionary,
+  initialPath,
+}: SiteHeaderProps) {
+  const detectedPath = usePathname()
+  const isHydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getClientSnapshot,
+    getServerSnapshot,
+  )
+  const currentPath = isHydrated
+    ? detectedPath
+    : resolveInitialHeaderPath(initialPath, detectedPath)
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -29,22 +50,8 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const localizedNav = [
-    { label: dictionary.navigation.home, href: '/' },
-    { label: dictionary.navigation.products, href: '/products' },
-    { label: dictionary.navigation.customPackaging, href: '/custom-packaging' },
-    { label: dictionary.navigation.industries, href: '/industries' },
-    { label: dictionary.navigation.about, href: '/about' },
-    { label: dictionary.navigation.news, href: '/news' },
-    { label: dictionary.navigation.contact, href: '/contact' },
-  ]
-
-  const isActive = (href: string) => {
-    const localizedHref = localizePath(href, locale)
-    return localizedHref === '/' || localizedHref === `/${locale}`
-      ? pathname === localizedHref
-      : pathname.startsWith(localizedHref)
-  }
+  const localizedNav = buildSiteHeaderNavigation(locale, dictionary.navigation, currentPath)
+  const contactNav = localizedNav[localizedNav.length - 1]
 
   return (
     <header
@@ -84,20 +91,20 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
           {localizedNav.slice(0, -1).map((item) => (
             <Link
               key={item.href}
-              href={localizePath(item.href, locale)}
+              href={item.href}
               className={cn(
                 'relative rounded px-3.5 py-2 text-sm font-medium transition-colors',
                 scrolled
-                  ? isActive(item.href)
+                  ? item.isActive
                     ? 'text-[#0d4077]'
                     : 'text-[#3a5068] hover:text-[#0d4077]'
-                  : isActive(item.href)
+                  : item.isActive
                     ? 'text-white'
                     : 'text-white/75 hover:text-white',
               )}
             >
               {item.label}
-              {isActive(item.href) && (
+              {item.isActive && (
                 <span
                   aria-hidden
                   className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-[#e8a020]"
@@ -107,20 +114,20 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
           ))}
           {/* Contact nav link */}
           <Link
-            href={localizePath('/contact', locale)}
+            href={contactNav.href}
             className={cn(
               'relative rounded px-3.5 py-2 text-sm font-medium transition-colors',
               scrolled
-                ? isActive('/contact')
+                ? contactNav.isActive
                   ? 'text-[#0d4077]'
                   : 'text-[#3a5068] hover:text-[#0d4077]'
-                : isActive('/contact')
+                : contactNav.isActive
                   ? 'text-white'
                   : 'text-white/75 hover:text-white',
             )}
           >
-            {dictionary.navigation.contact}
-            {isActive('/contact') && (
+            {contactNav.label}
+            {contactNav.isActive && (
               <span aria-hidden className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-[#e8a020]" />
             )}
           </Link>
@@ -130,7 +137,7 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
         <div className="flex items-center gap-3">
           <LanguageSwitcher
             locale={locale}
-            currentPath={pathname}
+            currentPath={currentPath}
             dictionary={dictionary}
             className={cn(
               'hidden xl:block',
@@ -174,11 +181,11 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
             {localizedNav.map((item) => (
               <Link
                 key={item.href}
-                href={localizePath(item.href, locale)}
+                href={item.href}
                 onClick={() => setOpen(false)}
                 className={cn(
                   'rounded px-3 py-3 text-[15px] font-medium',
-                  isActive(item.href)
+                  item.isActive
                     ? 'bg-[#f0f4f8] text-[#0d4077]'
                     : 'text-[#3a5068] hover:bg-[#f0f4f8] hover:text-[#0d4077]',
                 )}
@@ -188,7 +195,7 @@ export function SiteHeader({ locale = 'en', dictionary = defaultDictionary }: Si
             ))}
             <LanguageSwitcher
               locale={locale}
-              currentPath={pathname}
+              currentPath={currentPath}
               dictionary={dictionary}
               onNavigate={() => setOpen(false)}
               className="mt-3 border-t border-[#d8e1eb] pt-4 text-[#0d4077]"

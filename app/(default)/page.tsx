@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { HomePageBody } from '@/components/localized/home-page'
 import { loadHomePageData } from '@/lib/home-page-data'
-import { defaultLocale } from '@/lib/i18n/config'
+import { defaultLocale, localizePath } from '@/lib/i18n/config'
 import { localizedMetadata } from '@/lib/seo'
 
 export const revalidate = 60
@@ -17,5 +17,12 @@ export const metadata: Metadata = localizedMetadata('/', defaultLocale, {
 
 export default async function HomePage() {
   const { dictionary, products } = await loadHomePageData(defaultLocale)
-  return <HomePageBody locale={defaultLocale} dictionary={dictionary} products={products} />
+  return (
+    <HomePageBody
+      locale={defaultLocale}
+      dictionary={dictionary}
+      currentPath={localizePath('/', defaultLocale)}
+      products={products}
+    />
+  )
 }

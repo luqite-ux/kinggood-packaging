@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { HomePageBody } from '@/components/localized/home-page'
 import { loadHomePageData } from '@/lib/home-page-data'
-import { isLocale } from '@/lib/i18n/config'
+import { isLocale, localizePath } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/get-dictionary'
 import { localizedMetadata } from '@/lib/seo'
 
@@ -35,5 +35,12 @@ export default async function LocalizedHomePage({
   if (locale === 'en') permanentRedirect('/')
 
   const { dictionary, products } = await loadHomePageData(locale)
-  return <HomePageBody locale={locale} dictionary={dictionary} products={products} />
+  return (
+    <HomePageBody
+      locale={locale}
+      dictionary={dictionary}
+      currentPath={localizePath('/', locale)}
+      products={products}
+    />
+  )
 }

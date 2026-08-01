@@ -28,6 +28,7 @@ import { buildHomeProductCategories } from '@/lib/home-product-categories'
 type HomePageBodyProps = {
   locale: Locale
   dictionary: Dictionary
+  currentPath: string
   products?: Product[]
 }
 
@@ -52,6 +53,7 @@ function SectionLabel({ children, dark = false }: { children: React.ReactNode; d
 export function HomePageBody({
   locale,
   dictionary,
+  currentPath,
   products = defaultProducts,
 }: HomePageBodyProps) {
   const { home, shared } = dictionary.content
@@ -59,7 +61,7 @@ export function HomePageBody({
 
   return (
     <>
-      <SiteHeader locale={locale} dictionary={dictionary} />
+      <SiteHeader locale={locale} dictionary={dictionary} initialPath={currentPath} />
       <main>
 
         {/* ── 1. Hero ──────────────────────────────────────────────────── */}
