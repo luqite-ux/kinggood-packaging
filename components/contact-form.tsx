@@ -2,12 +2,11 @@
 
 import { useState } from 'react'
 import { CheckCircle2, Loader2, Send } from 'lucide-react'
+import { InquiryCaptchaField } from '@/components/inquiry-captcha-field'
 import { products as defaultProducts, type Product } from '@/lib/site'
-import { getSupabaseClient } from '@/lib/supabase'
 import type { Locale } from '@/lib/i18n/config'
 import defaultDictionary from '@/lib/i18n/dictionaries/en'
 import type { Dictionary } from '@/lib/i18n/types'
-import { submitInquiryWithClient } from '@/lib/contact-form'
 
 type ContactFormProps = {
   locale?: Locale
@@ -25,6 +24,7 @@ export function ContactForm({
 }: ContactFormProps) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
+  const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0)
 
   const requiredMessage = (field: string) =>
     dictionary.forms.requiredField.replace('{field}', field)
@@ -63,26 +63,35 @@ export function ContactForm({
 
     setValidationErrors({})
     setStatus('submitting')
-    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID
     const product = String(values.get('product') || '')
     const country = String(values.get('country') || '')
-    const submitted = await submitInquiryWithClient(
-      () => getSupabaseClient(),
-      (supabase) => tenantId
-        ? supabase.from('inquiries').insert({
-            tenant_id: tenantId,
-            name,
-            email,
-            company: String(values.get('company') || ''),
-            subject: product || dictionary.forms.websiteEnquiry,
-            message: [
-              message,
-              country && `${dictionary.forms.countryRegion}: ${country}`,
-            ].filter(Boolean).join('\n\n'),
-          })
-        : Promise.resolve({ error: new Error('Tenant is unavailable') }),
-    )
-    if (!submitted) return setStatus('error')
+    let response: Response
+    try {
+      response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          company: String(values.get('company') || ''),
+          subject: product || dictionary.forms.websiteEnquiry,
+          message: [
+            message,
+            country && `${dictionary.forms.countryRegion}: ${country}`,
+          ].filter(Boolean).join('\n\n'),
+          captchaToken: String(values.get('captchaToken') || ''),
+          captchaAnswer: String(values.get('captchaAnswer') || ''),
+          captchaScope: String(values.get('captchaScope') || ''),
+        }),
+      })
+    } catch {
+      setCaptchaRefreshKey((current) => current + 1)
+      return setStatus('error')
+    }
+    if (!response.ok) {
+      setCaptchaRefreshKey((current) => current + 1)
+      return setStatus('error')
+    }
     form.reset()
     setStatus('success')
   }
@@ -207,6 +216,8 @@ export function ContactForm({
           />
         </Field>
       </div>
+
+      <InquiryCaptchaField refreshKey={captchaRefreshKey} className="mt-5 text-[#0f1b2d]" />
 
       <button
         type="submit"

@@ -13,6 +13,7 @@ type SiteFooterProps = {
 
 export function SiteFooter({ locale = 'en', dictionary = defaultDictionary }: SiteFooterProps) {
   const year = new Date().getFullYear()
+  const footerCompanyName = company.legalName.replace(/[.\s]+$/, '')
   const localizedNav = [
     { label: dictionary.navigation.home, href: '/' },
     { label: dictionary.navigation.products, href: '/products' },
@@ -31,18 +32,22 @@ export function SiteFooter({ locale = 'en', dictionary = defaultDictionary }: Si
 
           {/* Brand column */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="inline-flex flex-col items-center text-white">
+            <Link
+              href={localizePath('/', locale)}
+              aria-label="Kinggood Packaging home"
+              className="inline-flex max-w-full flex-col items-center text-white"
+            >
               <Image
                 src={IMAGES.logo}
                 alt={dictionary.navigation.logoAlt}
                 width={160}
                 height={160}
-                className="h-14 w-auto"
+                className="h-20 w-auto max-w-full object-contain"
               />
               <span className="mt-1 whitespace-nowrap text-[9px] font-bold leading-none tracking-[0.22em]">
                 {dictionary.content.shared.brandLockup}
               </span>
-            </div>
+            </Link>
             <p className="mt-5 max-w-xs text-[15px] leading-relaxed text-[#f0f4f8]/70">
               {dictionary.footer.description}
             </p>
@@ -141,7 +146,7 @@ export function SiteFooter({ locale = 'en', dictionary = defaultDictionary }: Si
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-[#f0f4f8]/70 sm:flex-row sm:px-6 lg:px-8">
-          <p>&copy; {year} {company.legalName}. {dictionary.footer.allRightsReserved}</p>
+          <p>&copy; {year} {footerCompanyName}. All rights reserved.</p>
           <p>{dictionary.footer.location}</p>
         </div>
       </div>
